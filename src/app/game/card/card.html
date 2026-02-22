@@ -1,34 +1,34 @@
 <div class="bg-stone-50 rounded-2xl shadow w-48 h-64 flex flex-col relative">
   <div class="absolute top-2 left-2 w-4 h-4 flex flex-col items-center">
-    <span
-      class="text-4xl {{
-        suit() == 'hearts' || suit() == 'diamonds' ? 'text-red-600' : 'text-black'
-      }}"
-      >{{ value() }}</span
-    >
+    <span class="text-4xl {{ suit() == 'H' || suit() == 'D' ? 'text-red-600' : 'text-black' }}">{{
+      value()
+    }}</span>
     <img src="suits/{{ suit() }}.png" alt="{{ suit() }}" />
   </div>
-  <div
-    class="flex-1 grid mx-8 my-9"
-    style="grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(5, 1fr)"
-  >
-    @for (pip of pipPositions(); track $index) {
-      <img
-        src="suits/{{ suit() }}.png"
-        alt="{{ suit() }}"
-        class="w-5 h-5 place-self-center"
-        [style.grid-column]="pip[0]"
-        [style.grid-row]="pip[1]"
-      />
+  <div class="flex-1 mx-8 my-9 relative">
+    @if (value() === 'J' || value() === 'Q' || value() === 'K') {
+      <img src="figures/{{ suit()! + value()! }}.png" alt="" class="w-full h-full object-contain" />
+    } @else {
+      <div
+        class="w-full h-full grid"
+        style="grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(5, 1fr)"
+      >
+        @for (pip of pipPositions(); track $index) {
+          <img
+            src="suits/{{ suit() }}.png"
+            alt="{{ suit() }}"
+            class="w-8 h-8 place-self-center"
+            [style.grid-column]="pip[0]"
+            [style.grid-row]="pip[1]"
+          />
+        }
+      </div>
     }
   </div>
   <div class="absolute bottom-2 right-2 w-4 h-4 flex flex-col items-center rotate-180">
-    <span
-      class="text-4xl {{
-        suit() == 'hearts' || suit() == 'diamonds' ? 'text-red-600' : 'text-black'
-      }}"
-      >{{ value() }}</span
-    >
+    <span class="text-4xl {{ suit() == 'H' || suit() == 'D' ? 'text-red-600' : 'text-black' }}">{{
+      value()
+    }}</span>
     <img src="suits/{{ suit() }}.png" alt="{{ suit() }}" />
   </div>
 </div>
