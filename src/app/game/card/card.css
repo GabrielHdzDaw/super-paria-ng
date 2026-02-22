@@ -12,7 +12,7 @@
   height: 100%;
   position: relative;
   transform-style: preserve-3d;
-  transition: transform 0.6s ease;
+  transition: transform 0.2s ease;
 }
 
 .card-face {
@@ -24,7 +24,7 @@
 
 /* Reverso */
 .card-back {
-  background-color: #1a56db;
+  background-color: #118663;
   background-image:
     repeating-linear-gradient(
       45deg,
@@ -45,11 +45,10 @@
 .card-back-border {
   position: absolute;
   inset: 8px;
-  border: 2px solid rgba(255, 255, 255, 0.4);
+  border: 4px solid rgba(255, 255, 255, 0.4);
   border-radius: 6px;
 }
 
-/* Anverso: empieza girado, se revela al hacer flip */
 .card-front {
   transform: rotateY(180deg);
 }

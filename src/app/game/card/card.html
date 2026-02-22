@@ -1,12 +1,19 @@
-<div class="card-container" (click)="flipRequest.emit()">
+<div
+  class="card-container hover:scale-105 transition-transform duration-200 cursor-pointer select-none"
+  (click)="flipRequest.emit()"
+>
   <div class="card-inner" [style.transform]="isFlipped() ? 'rotateY(180deg)' : 'rotateY(0deg)'">
-    <!-- REVERSO -->
-    <div class="card-face card-back rounded-2xl shadow">
+    <!-- Back -->
+    <div
+      class="card-face card-back rounded-xl shadow hover:shadow-2xl transition-shadow duration-200"
+    >
       <div class="card-back-border"></div>
     </div>
 
-    <!-- ANVERSO -->
-    <div class="card-face card-front bg-stone-50 rounded-xl shadow flex flex-col relative">
+    <!-- Face -->
+    <div
+      class="card-face card-front bg-stone-50 rounded-xl flex flex-col relative shadow hover:shadow-2xl transition-shadow duration-200"
+    >
       <div class="absolute top-[4%] left-[4%] flex flex-col items-center">
         <span
           style="font-size: 12cqi; line-height: 1"
