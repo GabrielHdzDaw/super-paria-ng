@@ -1,4 +1,4 @@
-import { Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 
 const PIP_POSITIONS: Record<string, [number, number][]> = {
   'A':  [[2,3]],
@@ -21,12 +21,14 @@ const PIP_POSITIONS: Record<string, [number, number][]> = {
   imports: [],
   templateUrl: './card.html',
   styleUrl: './card.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class Card {
   value = input<string>();
   suit = input<string>();
+  isFlipped = input<boolean>(false);
 
+  flipRequest = output<void>();
   pipPositions = computed(() => PIP_POSITIONS[this.value() ?? ''] ?? []);
-  
 }
 

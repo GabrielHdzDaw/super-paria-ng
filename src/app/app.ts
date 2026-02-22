@@ -1,13 +1,11 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Card } from './game/card/card';
+import { GameController } from './game/game-controller/game-controller';
 
 @Component({
   selector: 'app',
-  imports: [RouterOutlet, Card],
+  imports: [RouterOutlet, GameController],
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrl: './app.css',
 })
-export class App {
-  protected readonly title = signal('super-paria-ng');
-}
+export class App {}
