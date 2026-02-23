@@ -10,12 +10,12 @@
 
 @keyframes dealFromCorner {
   0% {
-    transform: translate(400px, 400px) scale(0.2) rotate(30deg);
+    transform: translate(200px, 200px) scale(0.2) rotate(80deg);
     opacity: 0;
   }
   60% {
     opacity: 1;
-    transform: translate(-10px, 10px) scale(1.05) rotate(-3deg);
+    transform: translate(-5px, 5px) scale(1.1) rotate(-1deg);
   }
   100% {
     opacity: 1;

@@ -1,4 +1,4 @@
-import { Component, effect, input, signal } from '@angular/core';
+import { Component, effect, input, OnInit, signal } from '@angular/core';
 import { Card } from '../card/card';
 import { Deck, Suit, Value, CardInterface } from '../interfaces/deck.interface';
 
@@ -8,7 +8,15 @@ import { Deck, Suit, Value, CardInterface } from '../interfaces/deck.interface';
   templateUrl: './game-controller.html',
   styleUrl: './game-controller.css',
 })
-export class GameController {
+export class GameController implements OnInit {
+  readonly CARD_DELAY = 80;
+  readonly ANIMATION_DURATION = 500;
+  readonly PREVIEW_DURATION = 1000;
+
+  ngOnInit() {
+    this.startDealAnimation();
+  }
+
   suits: Suit[] = ['S', 'H', 'D', 'C'];
   values: Value[] = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
 
@@ -21,6 +29,9 @@ export class GameController {
   flippedIndices = signal<number[]>([]);
 
   resetDelay = input<number>();
+
+  dealAnimationActive = signal<boolean>(true);
+  previewActive = signal<boolean>(false);
 
   constructor() {
     effect(() => {
@@ -71,9 +82,38 @@ export class GameController {
     }
   }
 
+  startDealAnimation() {
+    this.dealAnimationActive.set(true);
+    this.previewActive.set(false);
+
+    const dealDuration =
+      (this.gameDeck.length - 1) * this.CARD_DELAY + this.ANIMATION_DURATION;
+
+    setTimeout(() => {
+      this.previewActive.set(true);
+    }, dealDuration);
+
+    setTimeout(() => {
+      this.previewActive.set(false);
+      setTimeout(() => {
+        this.dealAnimationActive.set(false);
+      }, 500);
+    }, dealDuration + this.PREVIEW_DURATION);
+  }
+
   reset() {
     this.firstCard.set(null);
     this.secondCard.set(null);
     this.locked.set(false);
+  }
+
+  resetGame() {
+    this.matchedIndices.set([]);
+    this.flippedIndices.set([]);
+    this.firstCard.set(null);
+    this.secondCard.set(null);
+    this.locked.set(false);
+    this.gameDeck = this.generateGameDeck(this.deck);
+    this.startDealAnimation();
   }
 }

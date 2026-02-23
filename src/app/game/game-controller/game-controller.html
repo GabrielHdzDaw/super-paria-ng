@@ -3,16 +3,18 @@
     @for (card of gameDeck; track $index) {
       <div
         class="card-anim-wrapper"
-        [class.deal-anim]="true"
+        [class.deal-anim]="dealAnimationActive()"
         [style.animationDelay]="$index * 0.08 + 's'"
       >
         <card
+          [class.pointer-events-none]="dealAnimationActive()"
           [suit]="card.suit"
           [value]="card.value"
-          [isFlipped]="flippedIndices().includes($index)"
+          [isFlipped]="previewActive() || flippedIndices().includes($index)"
           (flipRequest)="flipCard($index)"
         ></card>
       </div>
     }
   </div>
 </div>
+<button (click)="resetGame()" class="bg-cyan-300 p-2">Reset</button>
