@@ -1,12 +1,18 @@
 <div class="flex justify-center items-center w-full px-24 py-12">
   <div class="grid grid-cols-4 gap-4 w-full max-w-xl">
     @for (card of gameDeck; track $index) {
-      <card
-        [suit]="card.suit"
-        [value]="card.value"
-        [isFlipped]="flippedIndices().includes($index)"
-        (flipRequest)="flipCard($index)"
-      ></card>
+      <div
+        class="card-anim-wrapper"
+        [class.deal-anim]="true"
+        [style.animationDelay]="$index * 0.08 + 's'"
+      >
+        <card
+          [suit]="card.suit"
+          [value]="card.value"
+          [isFlipped]="flippedIndices().includes($index)"
+          (flipRequest)="flipCard($index)"
+        ></card>
+      </div>
     }
   </div>
 </div>

@@ -1,0 +1,24 @@
+/* Animación de repartir cartas desde la esquina inferior derecha */
+.card-anim-wrapper {
+  position: relative;
+  /* Para que la animación no afecte el grid */
+}
+
+.deal-anim {
+  animation: dealFromCorner 0.6s cubic-bezier(0.4, 1.4, 0.6, 1) both;
+}
+
+@keyframes dealFromCorner {
+  0% {
+    transform: translate(400px, 400px) scale(0.2) rotate(30deg);
+    opacity: 0;
+  }
+  60% {
+    opacity: 1;
+    transform: translate(-10px, 10px) scale(1.05) rotate(-3deg);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
