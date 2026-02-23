@@ -5,14 +5,14 @@
   <div class="card-inner" [style.transform]="isFlipped() ? 'rotateY(180deg)' : 'rotateY(0deg)'">
     <!-- Back -->
     <div
-      class="card-face card-back rounded-xl shadow hover:shadow-2xl transition-shadow duration-200"
+      class="card-face card-back rounded-lg shadow hover:shadow-2xl transition-shadow duration-200"
     >
       <div class="card-back-border"></div>
     </div>
 
     <!-- Face -->
     <div
-      class="card-face card-front bg-stone-50 rounded-xl flex flex-col relative shadow hover:shadow-2xl transition-shadow duration-200"
+      class="card-face card-front bg-stone-50 rounded-lg flex flex-col relative shadow hover:shadow-2xl transition-shadow duration-200"
     >
       <div class="absolute top-[4%] left-[4%] flex flex-col items-center">
         <span
@@ -31,7 +31,7 @@
           />
         } @else {
           <div
-            class="w-full h-full grid"
+            class="w-full h-full grid p-2"
             style="grid-template-columns: repeat(3, 1fr); grid-template-rows: repeat(5, 1fr)"
           >
             @for (pip of pipPositions(); track $index) {
