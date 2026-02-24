@@ -7,7 +7,7 @@
         [style.animationDelay]="$index * 0.08 + 's'"
       >
         <card
-          [class.pointer-events-none]="dealAnimationActive()"
+          [class.pointer-events-none]="dealAnimationActive() || locked()"
           [suit]="card.suit"
           [value]="card.value"
           [isFlipped]="previewActive() || flippedIndices().includes($index)"
@@ -17,4 +17,7 @@
     }
   </div>
 </div>
-<button (click)="resetGame()" class="bg-cyan-300 p-2">Reset</button>
+<button (click)="resetGame()" class="bg-cyan-300 p-2 cursor-pointer rounded text-white">
+  Reset
+</button>
+<span>{{ timeLeft() }}</span>

@@ -1,6 +1,7 @@
 import { Component, effect, input, OnInit, signal } from '@angular/core';
 import { Card } from '../card/card';
 import { Deck, Suit, Value, CardInterface } from '../interfaces/deck.interface';
+import { TimeInterval } from 'rxjs/internal/operators/timeInterval';
 
 @Component({
   selector: 'game-controller',
@@ -12,9 +13,12 @@ export class GameController implements OnInit {
   readonly CARD_DELAY = 80;
   readonly ANIMATION_DURATION = 500;
   readonly PREVIEW_DURATION = 1000;
+  timeLeft = signal<number>(93);
+  #timerInterval: ReturnType<typeof setInterval> | null = null;
 
   ngOnInit() {
     this.startDealAnimation();
+    this.startTimer();
   }
 
   suits: Suit[] = ['S', 'H', 'D', 'C'];
@@ -33,11 +37,36 @@ export class GameController implements OnInit {
   dealAnimationActive = signal<boolean>(true);
   previewActive = signal<boolean>(false);
 
+  startTimer() {
+    this.#timerInterval = setInterval(() => {
+      this.timeLeft.update((t) => t - 1);
+      console.log(this.timeLeft());
+      if (this.timeLeft() === 0) {
+        this.stopTimer();
+      }
+    }, 1000);
+  }
+
+  stopTimer() {
+    if (this.#timerInterval) {
+      clearInterval(this.#timerInterval);
+      this.#timerInterval = null;
+      this.locked.set(true);
+    }
+  }
+
   constructor() {
     effect(() => {
       this.flippedIndices();
       if (this.flippedIndices().length === 16) {
+        this.stopTimer();
         alert('You win');
+      }
+    });
+    effect(() => {
+      this.timeLeft();
+      if (this.timeLeft() === 0) {
+        alert("Time's over. You lose.");
       }
     });
   }
@@ -86,8 +115,7 @@ export class GameController implements OnInit {
     this.dealAnimationActive.set(true);
     this.previewActive.set(false);
 
-    const dealDuration =
-      (this.gameDeck.length - 1) * this.CARD_DELAY + this.ANIMATION_DURATION;
+    const dealDuration = (this.gameDeck.length - 1) * this.CARD_DELAY + this.ANIMATION_DURATION;
 
     setTimeout(() => {
       this.previewActive.set(true);
