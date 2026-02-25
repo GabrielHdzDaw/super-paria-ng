@@ -3,6 +3,10 @@ import { Card } from '../card/card';
 import { Deck, Suit, Value, CardInterface } from '../interfaces/deck.interface';
 import { TimeInterval } from 'rxjs/internal/operators/timeInterval';
 
+import Engine from 'src/assets/eb/src/engine';
+import Rom from 'src/assets/eb/src/rom/rom';
+import BackgroundLayer from 'src/assets/eb/src/rom/background_layer';
+
 @Component({
   selector: 'game-controller',
   imports: [Card],
@@ -136,6 +140,7 @@ export class GameController implements OnInit {
   }
 
   resetGame() {
+    this.timeLeft.set(93);
     this.matchedIndices.set([]);
     this.flippedIndices.set([]);
     this.firstCard.set(null);
