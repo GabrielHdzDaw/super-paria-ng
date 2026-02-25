@@ -1,24 +1,25 @@
-
-<div class="flex justify-center items-center w-full px-24 py-12">
-  <div class="grid grid-cols-4 gap-4 w-full max-w-xl">
-    @for (card of gameDeck; track $index) {
-      <div
-        class="card-anim-wrapper"
-        [class.deal-anim]="dealAnimationActive()"
-        [style.animationDelay]="$index * 0.08 + 's'"
-      >
-        <card
-          [class.pointer-events-none]="dealAnimationActive() || locked()"
-          [suit]="card.suit"
-          [value]="card.value"
-          [isFlipped]="previewActive() || flippedIndices().includes($index)"
-          (flipRequest)="flipCard($index)"
-        ></card>
-      </div>
-    }
+<div class="p-5 backdrop-blur-2xl">
+  <div class="flex justify-center items-center w-full px-24 py-12">
+    <div class="grid grid-cols-4 gap-4 w-full max-w-xl">
+      @for (card of gameDeck; track $index) {
+        <div
+          class="card-anim-wrapper"
+          [class.deal-anim]="dealAnimationActive()"
+          [style.animationDelay]="$index * 0.08 + 's'"
+        >
+          <card
+            [class.pointer-events-none]="dealAnimationActive() || locked()"
+            [suit]="card.suit"
+            [value]="card.value"
+            [isFlipped]="previewActive() || flippedIndices().includes($index)"
+            (flipRequest)="flipCard($index)"
+          ></card>
+        </div>
+      }
+    </div>
   </div>
+  <button (click)="resetGame()" class="bg-cyan-300 p-2 cursor-pointer rounded text-white">
+    Reset
+  </button>
+  <span>{{ timeLeft() }}</span>
 </div>
-<button (click)="resetGame()" class="bg-cyan-300 p-2 cursor-pointer rounded text-white">
-  Reset
-</button>
-<span>{{ timeLeft() }}</span>
