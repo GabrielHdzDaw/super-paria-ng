@@ -44,7 +44,6 @@ export class GameController implements OnInit {
   startTimer() {
     this.#timerInterval = setInterval(() => {
       this.timeLeft.update((t) => t - 1);
-      console.log(this.timeLeft());
       if (this.timeLeft() === 0) {
         this.stopTimer();
       }
