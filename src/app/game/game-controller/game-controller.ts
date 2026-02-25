@@ -16,8 +16,12 @@ export class GameController implements OnInit {
   timeLeft = signal<number>(93);
   #timerInterval: ReturnType<typeof setInterval> | null = null;
 
+  scoreTime = 0;
+
   matchAudio = new Audio('audio/clink.wav');
   flipAudio = new Audio('audio/flip.mp3');
+  applauseAudio = new Audio('audio/applause.mp3');
+  gameoverAudio = new Audio('audio/gameover.mp3');
 
   ngOnInit() {
     this.startDealAnimation();
@@ -31,6 +35,7 @@ export class GameController implements OnInit {
   secondCard = signal<number | null>(null);
 
   locked = signal<boolean>(false);
+  flash = signal<boolean>(false);
 
   matchedIndices = signal<number[]>([]);
   flippedIndices = signal<number[]>([]);
@@ -61,14 +66,20 @@ export class GameController implements OnInit {
     effect(() => {
       this.flippedIndices();
       if (this.flippedIndices().length === 16) {
+        this.scoreTime = this.timeLeft();
         this.stopTimer();
-        alert('You win');
+        const applauseAudioClone = this.applauseAudio.cloneNode() as HTMLAudioElement;
+        applauseAudioClone.volume = 0.3;
+        applauseAudioClone.play();
       }
     });
     effect(() => {
       this.timeLeft();
       if (this.timeLeft() === 0) {
-        alert("Time's over. You lose.");
+        this.stopTimer();
+        const gameoverAudioClone = this.gameoverAudio.cloneNode() as HTMLAudioElement;
+        gameoverAudioClone.volume = 0.3;
+        gameoverAudioClone.play();
       }
     });
   }
@@ -107,6 +118,11 @@ export class GameController implements OnInit {
       const second = this.gameDeck[index];
 
       if (this.checkMatch(first, second)) {
+        this.flash.set(true);
+        setTimeout(() => {
+          this.flash.set(false);
+        }, 50);
+
         const matchAudioClone = this.matchAudio.cloneNode() as HTMLAudioElement;
         matchAudioClone.volume = 0.2;
         matchAudioClone.play();
@@ -164,6 +180,7 @@ export class GameController implements OnInit {
   }
 
   resetGame() {
+    this.#timerInterval = null;
     this.timeLeft.set(93);
     this.matchedIndices.set([]);
     this.flippedIndices.set([]);

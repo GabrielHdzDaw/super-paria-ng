@@ -1,4 +1,4 @@
-<div class="absolute inset-0 w-full h-full bg-white z-50 hidden" [class.hidden]=""></div>
+<div class="absolute inset-0 w-full h-full bg-white z-50" [class.hidden]="!flash()"></div>
 <div class="p-3 backdrop-blur-xl max-w-3xl mx-auto rounded-xl shadow-2xl bg-white/20">
   <div class="flex justify-center items-center w-full px-24 py-12">
     <div class="grid grid-cols-4 gap-4 w-full max-w-xl">
@@ -20,8 +20,12 @@
       }
     </div>
   </div>
-  <button (click)="resetGame()" class="bg-cyan-300 p-2 cursor-pointer rounded text-white">
-    Reset
-  </button>
-  <span>{{ timeLeft() }}</span>
+  <div class="flex">
+    <button (click)="resetGame()" class="bg-cyan-300 p-2 cursor-pointer rounded text-white">
+      Reset
+    </button>
+    <span class="text-5xl bg-black/30 backdrop-blur-xl px-5 py-1 rounded-2xl text-white"
+      >TIME LEFT: {{ timeLeft() }}</span
+    >
+  </div>
 </div>
