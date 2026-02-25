@@ -9,4 +9,7 @@ import { EarthboundBgComponent } from './game/earthbound-background/earthbound-b
   templateUrl: './app.html',
   styleUrl: './app.css',
 })
-export class App {}
+export class App {
+  layer1 = Math.floor(Math.random() * 321)
+  layer2 = Math.floor(Math.random() * 321)
+}

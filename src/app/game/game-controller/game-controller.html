@@ -1,4 +1,4 @@
-<div class="p-5 backdrop-blur-2xl">
+<div class="p-3 backdrop-blur-3xl max-w-3xl mx-auto rounded-xl shadow-2xl bg-gray-300/30">
   <div class="flex justify-center items-center w-full px-24 py-12">
     <div class="grid grid-cols-4 gap-4 w-full max-w-xl">
       @for (card of gameDeck; track $index) {
@@ -8,6 +8,7 @@
           [style.animationDelay]="$index * 0.08 + 's'"
         >
           <card
+            [matched]="matchedIndices().includes($index)"
             [class.pointer-events-none]="dealAnimationActive() || locked()"
             [suit]="card.suit"
             [value]="card.value"

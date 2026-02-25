@@ -3,10 +3,6 @@ import { Card } from '../card/card';
 import { Deck, Suit, Value, CardInterface } from '../interfaces/deck.interface';
 import { TimeInterval } from 'rxjs/internal/operators/timeInterval';
 
-import Engine from 'src/assets/eb/src/engine';
-import Rom from 'src/assets/eb/src/rom/rom';
-import BackgroundLayer from 'src/assets/eb/src/rom/background_layer';
-
 @Component({
   selector: 'game-controller',
   imports: [Card],
@@ -19,6 +15,9 @@ export class GameController implements OnInit {
   readonly PREVIEW_DURATION = 1000;
   timeLeft = signal<number>(93);
   #timerInterval: ReturnType<typeof setInterval> | null = null;
+
+  matchAudio = new Audio('audio/clink.wav');
+  flipAudio = new Audio('audio/flip.mp3');
 
   ngOnInit() {
     this.startDealAnimation();
@@ -91,7 +90,12 @@ export class GameController implements OnInit {
     if (this.matchedIndices().includes(index)) return;
     if (this.firstCard() === index) return;
 
+    const flipAudioClone = this.flipAudio.cloneNode() as HTMLAudioElement;
+    flipAudioClone.volume = 0.2;
+    flipAudioClone.play();
+
     if (this.firstCard() === null) {
+      flipAudioClone.play();
       this.firstCard.set(index);
       this.flippedIndices.update((i) => [...i, index]);
     } else {
@@ -102,30 +106,51 @@ export class GameController implements OnInit {
       const first = this.gameDeck[this.firstCard()!];
       const second = this.gameDeck[index];
 
-      if (first.suit === second.suit && first.value === second.value) {
+      if (this.checkMatch(first, second)) {
+        const matchAudioClone = this.matchAudio.cloneNode() as HTMLAudioElement;
+        matchAudioClone.volume = 0.2;
+        matchAudioClone.play();
         this.matchedIndices.update((i) => [...i, this.firstCard()!, index]);
         this.reset();
       } else {
         setTimeout(() => {
           this.flippedIndices.update((i) => i.filter((i) => i !== this.firstCard() && i !== index));
+          flipAudioClone.play();
           this.reset();
         }, this.resetDelay());
       }
     }
   }
 
+  checkMatch(cardA: CardInterface, cardB: CardInterface): boolean {
+    return cardA.suit === cardB.suit && cardA.value === cardB.value;
+  }
+
   startDealAnimation() {
     this.dealAnimationActive.set(true);
     this.previewActive.set(false);
+    for (let i = 0; i < this.gameDeck.length; i++) {
+      setTimeout(() => {
+        const flipAudioClone = this.flipAudio.cloneNode() as HTMLAudioElement;
+        flipAudioClone.volume = 0.2;
+        flipAudioClone.play();
+      }, i * this.CARD_DELAY);
+    }
 
     const dealDuration = (this.gameDeck.length - 1) * this.CARD_DELAY + this.ANIMATION_DURATION;
 
     setTimeout(() => {
       this.previewActive.set(true);
+      const flipAudioClone = this.flipAudio.cloneNode() as HTMLAudioElement;
+      flipAudioClone.volume = 0.2;
+      flipAudioClone.play();
     }, dealDuration);
 
     setTimeout(() => {
       this.previewActive.set(false);
+      const flipAudioClone = this.flipAudio.cloneNode() as HTMLAudioElement;
+      flipAudioClone.volume = 0.2;
+      flipAudioClone.play();
       setTimeout(() => {
         this.dealAnimationActive.set(false);
       }, 500);

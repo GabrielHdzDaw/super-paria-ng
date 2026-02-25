@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, signal } from '@angular/core';
+import { Component, AfterViewInit, signal, input } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import Engine from 'src/assets/eb/src/engine';
 import Rom from 'src/assets/eb/src/rom/rom';
@@ -7,19 +7,15 @@ import { FormField } from '@angular/forms/signals';
 
 @Component({
   selector: 'earthbound-bg',
-  imports: [FormField],
+  imports: [],
   templateUrl: 'earthbound-background.html',
 })
 export class EarthboundBgComponent implements AfterViewInit {
   constructor(private http: HttpClient) {}
 
-  layersModel = signal({
-    layer1Signal: 120,
-    layer2Signal: 120,
-  });
 
-  layer1Signal = signal<number>(120);
-  layer2Signal = signal<number>(120);
+  layer1 = input<number>(120);
+  layer2 = input<number>(120);
 
   ngAfterViewInit() {
     this.http
@@ -28,8 +24,8 @@ export class EarthboundBgComponent implements AfterViewInit {
         const backgroundData = new Uint8Array(data);
         const ROM = new Rom(backgroundData);
 
-        const layer1 = new BackgroundLayer(this.layer1Signal(), ROM);
-        const layer2 = new BackgroundLayer(this.layer2Signal(), ROM);
+        const layer1 = new BackgroundLayer(this.layer1(), ROM);
+        const layer2 = new BackgroundLayer(this.layer2(), ROM);
 
         const engine = new Engine([layer1, layer2], {
           fps: 30,

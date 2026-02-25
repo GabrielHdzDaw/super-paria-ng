@@ -90,6 +90,7 @@ export class Card {
   value = input<string>();
   suit = input<string>();
   isFlipped = input<boolean>(false);
+  matched = input<boolean>(false);
 
   flipRequest = output<void>();
   pipPositions = computed(() => PIP_POSITIONS[this.value() ?? ''] ?? []);

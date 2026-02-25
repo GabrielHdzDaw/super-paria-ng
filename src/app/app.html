@@ -1,3 +1,5 @@
-<earthbound-bg></earthbound-bg>
+<earthbound-bg [layer1]="layer1" [layer2]="layer2"></earthbound-bg>
 <router-outlet></router-outlet>
-<game-controller [resetDelay]="600"></game-controller>
+<main class="flex md:items-center items-start justify-center min-h-screen w-full">
+  <game-controller [resetDelay]="600"></game-controller>
+</main>

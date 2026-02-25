@@ -1,9 +1,38 @@
+.shiny:after {
+  content: '';
+  position: absolute;
+  top: -200px;
+  left: -70px;
+  background-color: rgba(255, 255, 255, 0.3);
+  height: 300px;
+  width: 50px;
+  animation: slideDownRight 1s infinite;
+  transform: skewX(-30deg);
+  z-index: 2;
+  pointer-events: none;
+}
+
+@keyframes slideDownRight {
+  0% {
+    top: -200px;
+    left: -70px;
+  }
+  100% {
+    top: 100%;
+    left: 100%;
+  }
+}
+:host {
+  display: block;
+}
+
 .card-container {
   perspective: 1000px;
   width: 100%;
   aspect-ratio: 3 / 4;
   height: auto;
   container-type: inline-size;
+  overflow: hidden; /* Limita el efecto shiny y el escalado al borde de la carta */
 }
 
 .card-inner {
@@ -28,14 +57,14 @@
     repeating-linear-gradient(
       45deg,
       transparent,
-      transparent 10px,
+      transparent 2px,
       rgba(255, 255, 255, 0.15) 10px,
       rgba(255, 255, 255, 0.15) 20px
     ),
     repeating-linear-gradient(
       -45deg,
       transparent,
-      transparent 10px,
+      transparent 2px,
       rgba(255, 255, 255, 0.15) 10px,
       rgba(255, 255, 255, 0.15) 20px
     );

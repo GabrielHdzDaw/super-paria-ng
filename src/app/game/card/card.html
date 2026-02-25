@@ -1,5 +1,6 @@
 <div
   class="card-container hover:scale-105 transition-transform duration-200 cursor-pointer select-none"
+  [class.shiny]="matched()"
   (click)="flipRequest.emit()"
 >
   <div class="card-inner" [style.transform]="isFlipped() ? 'rotateY(180deg)' : 'rotateY(0deg)'">

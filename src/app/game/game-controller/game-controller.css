@@ -1,8 +1,14 @@
-/* Animación de repartir cartas desde la esquina inferior derecha */
+:host {
+  display: block;
+  width: 100%;
+}
+
 .card-anim-wrapper {
   position: relative;
-  /* Para que la animación no afecte el grid */
+  z-index: 1;
 }
+
+
 
 .deal-anim {
   animation: dealFromCorner 0.6s cubic-bezier(0.4, 1.4, 0.6, 1) both;
@@ -20,5 +26,30 @@
   100% {
     opacity: 1;
     transform: none;
+  }
+}
+
+.shiny:after {
+  content: '';
+  position: absolute;
+  top: -200px; /* Comienza fuera del contenedor */
+  left: -70px; /* Comienza fuera del contenedor */
+  background-color: rgba(255, 255, 255, 0.3);
+  height: 300px;
+  width: 50px;
+  animation: slideDownRight 1s infinite;
+  transform: skewX(-30deg);
+  z-index: 2;
+  pointer-events: none;
+}
+
+@keyframes slideDownRight {
+  0% {
+    top: -200px; /* Comienza fuera del contenedor */
+    left: -70px; /* Comienza fuera del contenedor */
+  }
+  100% {
+    top: 100%; /* Se desplaza hacia abajo */
+    left: 100%; /* Se desplaza hacia la derecha */
   }
 }
