@@ -8,8 +8,6 @@
   z-index: 1;
 }
 
-
-
 .deal-anim {
   animation: dealFromCorner 0.6s cubic-bezier(0.4, 1.4, 0.6, 1) both;
 }
@@ -32,8 +30,8 @@
 .shiny:after {
   content: '';
   position: absolute;
-  top: -200px; /* Comienza fuera del contenedor */
-  left: -70px; /* Comienza fuera del contenedor */
+  top: -200px;
+  left: -70px;
   background-color: rgba(255, 255, 255, 0.3);
   height: 300px;
   width: 50px;
@@ -45,11 +43,11 @@
 
 @keyframes slideDownRight {
   0% {
-    top: -200px; /* Comienza fuera del contenedor */
-    left: -70px; /* Comienza fuera del contenedor */
+    top: -200px;
+    left: -70px;
   }
   100% {
-    top: 100%; /* Se desplaza hacia abajo */
-    left: 100%; /* Se desplaza hacia la derecha */
+    top: 100%;
+    left: 100%;
   }
 }

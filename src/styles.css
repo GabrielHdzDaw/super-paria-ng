@@ -1,14 +1,16 @@
 /* You can add global styles to this file, and also import other style files */
 
-@import "tailwindcss";
+@import 'tailwindcss';
 
-html, body {
+html,
+body {
   height: 100%;
   margin: 0;
+  overflow: hidden;
 }
 
-body{
-    background-color: rgb(110, 110, 110);
+body {
+  background-color: rgb(110, 110, 110);
 }
 
 canvas.bg {

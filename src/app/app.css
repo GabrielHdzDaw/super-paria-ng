@@ -1,0 +1,4 @@
+#parallax-main {
+  transition: transform 0.2s cubic-bezier(0.4, 1.4, 0.6, 1);
+  will-change: transform;
+}
