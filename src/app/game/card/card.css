@@ -2,20 +2,21 @@
   content: '';
   position: absolute;
   top: -200px;
-  left: -70px;
+  left: 0;
   background-color: rgba(255, 255, 255, 0.3);
-  height: 300px;
-  width: 50px;
+  height: calc(100% + 200px);
+  width: 30px;
   animation: slideDownRight 1s infinite;
   transform: skewX(-30deg);
   z-index: 2;
   pointer-events: none;
+  border-radius: 12px;
 }
 
 @keyframes slideDownRight {
   0% {
-    top: -200px;
-    left: -70px;
+    top: -250px;
+    left: 0;
   }
   100% {
     top: 100%;
@@ -33,6 +34,7 @@
   height: auto;
   container-type: inline-size;
   overflow: hidden; /* Limita el efecto shiny y el escalado al borde de la carta */
+  position: relative;
 }
 
 .card-inner {

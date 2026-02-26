@@ -27,27 +27,8 @@
   }
 }
 
-.shiny:after {
-  content: '';
-  position: absolute;
-  top: -200px;
-  left: -70px;
-  background-color: rgba(255, 255, 255, 0.3);
-  height: 300px;
-  width: 50px;
-  animation: slideDownRight 1s infinite;
-  transform: skewX(-30deg);
-  z-index: 2;
-  pointer-events: none;
+.shiny {
+  clip-path: inset(0 round 8px);
 }
 
-@keyframes slideDownRight {
-  0% {
-    top: -200px;
-    left: -70px;
-  }
-  100% {
-    top: 100%;
-    left: 100%;
-  }
-}
+
