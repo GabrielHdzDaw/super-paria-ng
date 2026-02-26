@@ -1,9 +1,10 @@
-import { Component, effect, input, OnInit, signal } from '@angular/core';
+import { Component, effect, inject, input, OnInit, signal } from '@angular/core';
 import { Card } from '../card/card';
 import { Deck, Suit, Value, CardInterface } from '../interfaces/deck.interface';
 import { TimeInterval } from 'rxjs/internal/operators/timeInterval';
 import { ComboComponent } from '../combo-component/combo-component';
 import { Combo } from '../interfaces/combo.interface';
+import { SoundService } from 'src/app/shared/sound-service';
 
 @Component({
   selector: 'game-controller',
@@ -12,6 +13,7 @@ import { Combo } from '../interfaces/combo.interface';
   styleUrl: './game-controller.css',
 })
 export class GameController implements OnInit {
+  soundService = inject(SoundService);
   readonly CARD_DELAY = 80;
   readonly ANIMATION_DURATION = 500;
   readonly PREVIEW_DURATION = 1000;
@@ -19,11 +21,6 @@ export class GameController implements OnInit {
   #timerInterval: ReturnType<typeof setInterval> | null = null;
 
   scoreTime = 0;
-
-  matchAudio = new Audio('audio/clink.wav');
-  flipAudio = new Audio('audio/flip.mp3');
-  applauseAudio = new Audio('audio/applause.mp3');
-  gameoverAudio = new Audio('audio/gameover.mp3');
 
   ngOnInit() {
     this.startDealAnimation();
@@ -76,18 +73,14 @@ export class GameController implements OnInit {
         console.log(this.totalCombos());
         this.stopTimer();
         this.locked.set(true);
-        const applauseAudioClone = this.applauseAudio.cloneNode() as HTMLAudioElement;
-        applauseAudioClone.volume = 0.3;
-        applauseAudioClone.play();
+        this.soundService.play('applause', 0.3);
       }
     });
     effect(() => {
       this.timeLeft();
       if (this.timeLeft() <= 0) {
         this.stopTimer();
-        const gameoverAudioClone = this.gameoverAudio.cloneNode() as HTMLAudioElement;
-        gameoverAudioClone.volume = 0.3;
-        gameoverAudioClone.play();
+        this.soundService.play('gameover', 0.3);
       }
     });
   }
@@ -109,12 +102,10 @@ export class GameController implements OnInit {
     if (this.matchedIndices().includes(index)) return;
     if (this.firstCard() === index) return;
 
-    const flipAudioClone = this.flipAudio.cloneNode() as HTMLAudioElement;
-    flipAudioClone.volume = 0.2;
-    flipAudioClone.play();
+    this.soundService.play('flip', 0.3);
 
     if (this.firstCard() === null) {
-      flipAudioClone.play();
+      this.soundService.play('flip', 0.3);
       this.firstCard.set(index);
       this.flippedIndices.update((i) => [...i, index]);
     } else {
@@ -133,9 +124,7 @@ export class GameController implements OnInit {
           this.flash.set(false);
         }, 50);
 
-        const matchAudioClone = this.matchAudio.cloneNode() as HTMLAudioElement;
-        matchAudioClone.volume = 0.2;
-        matchAudioClone.play();
+        this.soundService.play('match', 0.3);
         this.matchedIndices.update((i) => [...i, this.firstCard()!, index]);
         this.reset();
       } else {
@@ -143,7 +132,7 @@ export class GameController implements OnInit {
         console.log(this.currentCombo());
         setTimeout(() => {
           this.flippedIndices.update((i) => i.filter((i) => i !== this.firstCard() && i !== index));
-          flipAudioClone.play();
+          this.soundService.play('flip', 0.3);
           this.reset();
         }, this.resetDelay());
       }
@@ -163,9 +152,7 @@ export class GameController implements OnInit {
     this.previewActive.set(false);
     for (let i = 0; i < this.gameDeck.length; i++) {
       setTimeout(() => {
-        const flipAudioClone = this.flipAudio.cloneNode() as HTMLAudioElement;
-        flipAudioClone.volume = 0.2;
-        flipAudioClone.play();
+        this.soundService.play('flip', 0.3);
       }, i * this.CARD_DELAY);
     }
 
@@ -173,16 +160,12 @@ export class GameController implements OnInit {
 
     setTimeout(() => {
       this.previewActive.set(true);
-      const flipAudioClone = this.flipAudio.cloneNode() as HTMLAudioElement;
-      flipAudioClone.volume = 0.2;
-      flipAudioClone.play();
+      this.soundService.play('flip', 0.3);
     }, dealDuration);
 
     setTimeout(() => {
       this.previewActive.set(false);
-      const flipAudioClone = this.flipAudio.cloneNode() as HTMLAudioElement;
-      flipAudioClone.volume = 0.2;
-      flipAudioClone.play();
+      this.soundService.play('flip', 0.3);
       setTimeout(() => {
         this.dealAnimationActive.set(false);
       }, 500);
