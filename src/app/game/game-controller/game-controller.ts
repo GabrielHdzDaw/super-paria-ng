@@ -65,7 +65,7 @@ export class GameController implements OnInit {
   constructor() {
     effect(() => {
       this.flippedIndices();
-      if (this.flippedIndices().length === 16) {
+      if (this.flippedIndices().length === this.gameDeck.length) {
         this.scoreTime = this.timeLeft();
         this.stopTimer();
         const applauseAudioClone = this.applauseAudio.cloneNode() as HTMLAudioElement;
