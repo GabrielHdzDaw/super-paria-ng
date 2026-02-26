@@ -75,7 +75,7 @@ export class GameController implements OnInit {
     });
     effect(() => {
       this.timeLeft();
-      if (this.timeLeft() === 0) {
+      if (this.timeLeft() <= 0) {
         this.stopTimer();
         const gameoverAudioClone = this.gameoverAudio.cloneNode() as HTMLAudioElement;
         gameoverAudioClone.volume = 0.3;
