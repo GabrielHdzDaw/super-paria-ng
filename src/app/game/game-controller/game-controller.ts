@@ -2,10 +2,12 @@ import { Component, effect, input, OnInit, signal } from '@angular/core';
 import { Card } from '../card/card';
 import { Deck, Suit, Value, CardInterface } from '../interfaces/deck.interface';
 import { TimeInterval } from 'rxjs/internal/operators/timeInterval';
+import { ComboComponent } from '../combo-component/combo-component';
+import { Combo } from '../interfaces/combo.interface';
 
 @Component({
   selector: 'game-controller',
-  imports: [Card],
+  imports: [Card, ComboComponent],
   templateUrl: './game-controller.html',
   styleUrl: './game-controller.css',
 })
@@ -40,6 +42,10 @@ export class GameController implements OnInit {
   matchedIndices = signal<number[]>([]);
   flippedIndices = signal<number[]>([]);
 
+  currentCombo = signal<number>(0);
+
+  totalCombos = signal<Combo[]>([]);
+
   resetDelay = input<number>();
 
   dealAnimationActive = signal<boolean>(true);
@@ -67,6 +73,7 @@ export class GameController implements OnInit {
       this.flippedIndices();
       if (this.flippedIndices().length === this.gameDeck.length) {
         this.scoreTime = this.timeLeft();
+        console.log(this.totalCombos());
         this.stopTimer();
         this.locked.set(true);
         const applauseAudioClone = this.applauseAudio.cloneNode() as HTMLAudioElement;
@@ -119,6 +126,8 @@ export class GameController implements OnInit {
       const second = this.gameDeck[index];
 
       if (this.checkMatch(first, second)) {
+        this.currentCombo.update((c) => c + 1);
+        console.log(this.currentCombo());
         this.flash.set(true);
         setTimeout(() => {
           this.flash.set(false);
@@ -130,6 +139,8 @@ export class GameController implements OnInit {
         this.matchedIndices.update((i) => [...i, this.firstCard()!, index]);
         this.reset();
       } else {
+        this.currentCombo.set(0);
+        console.log(this.currentCombo());
         setTimeout(() => {
           this.flippedIndices.update((i) => i.filter((i) => i !== this.firstCard() && i !== index));
           flipAudioClone.play();
@@ -141,6 +152,10 @@ export class GameController implements OnInit {
 
   checkMatch(cardA: CardInterface, cardB: CardInterface): boolean {
     return cardA.suit === cardB.suit && cardA.value === cardB.value;
+  }
+
+  addCombo(combo: Combo) {
+    this.totalCombos.update((c) => [...c, combo]);
   }
 
   startDealAnimation() {
@@ -183,6 +198,8 @@ export class GameController implements OnInit {
   resetGame() {
     this.stopTimer();
     this.timeLeft.set(93);
+    this.currentCombo.set(0);
+    this.totalCombos.set([]);
     this.matchedIndices.set([]);
     this.flippedIndices.set([]);
     this.firstCard.set(null);
@@ -191,5 +208,8 @@ export class GameController implements OnInit {
     this.gameDeck = this.generateGameDeck(this.deck);
     this.startDealAnimation();
     this.startTimer();
+  }
+  debug(suit, value) {
+    console.log(suit, value);
   }
 }
