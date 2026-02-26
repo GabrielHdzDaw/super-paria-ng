@@ -68,6 +68,7 @@ export class GameController implements OnInit {
       if (this.flippedIndices().length === this.gameDeck.length) {
         this.scoreTime = this.timeLeft();
         this.stopTimer();
+        this.locked.set(true);
         const applauseAudioClone = this.applauseAudio.cloneNode() as HTMLAudioElement;
         applauseAudioClone.volume = 0.3;
         applauseAudioClone.play();
@@ -180,7 +181,7 @@ export class GameController implements OnInit {
   }
 
   resetGame() {
-    this.#timerInterval = null;
+    this.stopTimer();
     this.timeLeft.set(93);
     this.matchedIndices.set([]);
     this.flippedIndices.set([]);
@@ -189,5 +190,6 @@ export class GameController implements OnInit {
     this.locked.set(false);
     this.gameDeck = this.generateGameDeck(this.deck);
     this.startDealAnimation();
+    this.startTimer();
   }
 }
