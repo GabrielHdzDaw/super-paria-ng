@@ -128,6 +128,9 @@ export class GameController implements OnInit {
         this.matchedIndices.update((i) => [...i, this.firstCard()!, index]);
         this.reset();
       } else {
+        if (this.currentCombo() > 2) {
+          this.soundService.play('scratch', 0.3);
+        }
         this.currentCombo.set(0);
         console.log(this.currentCombo());
         setTimeout(() => {
