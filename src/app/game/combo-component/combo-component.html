@@ -1,5 +1,8 @@
 @if ((currentCombo() ?? 0) >= 2) {
-  <span class="text-7xl text-teal-700 animate-bounce fixed right-1/12 top-1/2 select-none" style="animation-duration: 0.8s">
+  <span
+    class="combo text-7xl text-teal-700 animate-bounce fixed right-1/12 top-1/2 select-none"
+    [style.animationDuration]="animationDuration()"
+  >
     {{ currentComboObject().name }}
   </span>
 }

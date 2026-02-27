@@ -48,6 +48,8 @@ export class GameController implements OnInit {
   dealAnimationActive = signal<boolean>(true);
   previewActive = signal<boolean>(false);
 
+  rumble = signal<boolean>(false);
+
   startTimer() {
     this.#timerInterval = setInterval(() => {
       this.timeLeft.update((t) => t - 1);
@@ -73,14 +75,14 @@ export class GameController implements OnInit {
         console.log(this.totalCombos());
         this.stopTimer();
         this.locked.set(true);
-        this.soundService.play('applause', 0.3);
+        this.soundService.play('applause', 0.1);
       }
     });
     effect(() => {
       this.timeLeft();
       if (this.timeLeft() <= 0) {
         this.stopTimer();
-        this.soundService.play('gameover', 0.3);
+        this.soundService.play('gameover', 0.1);
       }
     });
   }
@@ -102,10 +104,10 @@ export class GameController implements OnInit {
     if (this.matchedIndices().includes(index)) return;
     if (this.firstCard() === index) return;
 
-    this.soundService.play('flip', 0.3);
+    this.soundService.play('flip', 0.1);
 
     if (this.firstCard() === null) {
-      this.soundService.play('flip', 0.3);
+      this.soundService.play('flip', 0.1);
       this.firstCard.set(index);
       this.flippedIndices.update((i) => [...i, index]);
     } else {
@@ -118,24 +120,23 @@ export class GameController implements OnInit {
 
       if (this.checkMatch(first, second)) {
         this.currentCombo.update((c) => c + 1);
-        console.log(this.currentCombo());
         this.flash.set(true);
+        this.rumble.set(true);
         setTimeout(() => {
           this.flash.set(false);
         }, 50);
 
-        this.soundService.play('match', 0.3);
+        this.soundService.play('match', 0.1);
         this.matchedIndices.update((i) => [...i, this.firstCard()!, index]);
         this.reset();
       } else {
         if (this.currentCombo() > 2) {
-          this.soundService.play('scratch', 0.3);
+          this.soundService.play('scratch', 0.1);
         }
         this.currentCombo.set(0);
-        console.log(this.currentCombo());
         setTimeout(() => {
           this.flippedIndices.update((i) => i.filter((i) => i !== this.firstCard() && i !== index));
-          this.soundService.play('flip', 0.3);
+          this.soundService.play('flip', 0.1);
           this.reset();
         }, this.resetDelay());
       }
@@ -155,7 +156,7 @@ export class GameController implements OnInit {
     this.previewActive.set(false);
     for (let i = 0; i < this.gameDeck.length; i++) {
       setTimeout(() => {
-        this.soundService.play('flip', 0.3);
+        this.soundService.play('flip', 0.1);
       }, i * this.CARD_DELAY);
     }
 
@@ -163,12 +164,12 @@ export class GameController implements OnInit {
 
     setTimeout(() => {
       this.previewActive.set(true);
-      this.soundService.play('flip', 0.3);
+      this.soundService.play('flip', 0.1);
     }, dealDuration);
 
     setTimeout(() => {
       this.previewActive.set(false);
-      this.soundService.play('flip', 0.3);
+      this.soundService.play('flip', 0.1);
       setTimeout(() => {
         this.dealAnimationActive.set(false);
       }, 500);

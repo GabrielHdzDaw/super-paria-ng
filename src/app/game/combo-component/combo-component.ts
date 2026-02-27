@@ -27,6 +27,16 @@ export class ComboComponent {
   emitCombo = output<Combo>();
   currentComboObject = computed(() => this.comboScores[(this.currentCombo() ?? 0) - 2]);
 
+  animationDuration = computed(() => {
+    const combo = this.currentCombo() ?? 0;
+    const min = 0.05;
+    const max = 0.3;
+    if (combo < 2) return `${max}s`;
+    const capped = Math.min(combo, 8);
+    const duration = max - ((capped - 2) / 6) * (max - min);
+    return `${duration.toFixed(2)}s`;
+  });
+
   constructor() {
     effect(() => {
       const current = this.currentCombo() ?? 0;
