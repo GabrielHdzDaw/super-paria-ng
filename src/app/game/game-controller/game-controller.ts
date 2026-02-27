@@ -1,7 +1,6 @@
 import { Component, effect, inject, input, OnInit, signal } from '@angular/core';
 import { Card } from '../card/card';
 import { Deck, Suit, Value, CardInterface } from '../interfaces/deck.interface';
-import { TimeInterval } from 'rxjs/internal/operators/timeInterval';
 import { ComboComponent } from '../combo-component/combo-component';
 import { Combo } from '../interfaces/combo.interface';
 import { SoundService } from 'src/app/shared/sound-service';
