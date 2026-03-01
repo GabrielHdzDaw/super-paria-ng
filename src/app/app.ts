@@ -1,7 +1,8 @@
 import { Component, signal, AfterViewInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { GameController } from './game/game-controller/game-controller';
-import { EarthboundBgComponent } from './game/earthbound-background/earthbound-background';
+import { EarthboundBgComponent } from './shared/earthbound-background/earthbound-background';
+import { combinations } from './shared/earthbound-background/layer-combos';
 
 @Component({
   selector: 'app',
@@ -10,8 +11,9 @@ import { EarthboundBgComponent } from './game/earthbound-background/earthbound-b
   styleUrl: './app.css',
 })
 export class App implements AfterViewInit {
-  layer1 = Math.floor(Math.random() * 321);
-  layer2 = Math.floor(Math.random() * 321);
+  layerCombination = combinations[Math.floor(Math.random() * (combinations.length - 1))];
+  layer1 = this.layerCombination.layer1;
+  layer2 = this.layerCombination.layer2;
 
   ngAfterViewInit() {
     const main = document.getElementById('parallax-main');

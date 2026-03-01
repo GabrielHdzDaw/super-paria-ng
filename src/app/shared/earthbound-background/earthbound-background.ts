@@ -5,6 +5,7 @@ import Rom from 'src/assets/eb/src/rom/rom';
 import BackgroundLayer from 'src/assets/eb/src/rom/background_layer';
 import { FormField } from '@angular/forms/signals';
 
+
 @Component({
   selector: 'earthbound-bg',
   imports: [],
