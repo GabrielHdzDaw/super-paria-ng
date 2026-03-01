@@ -8,8 +8,8 @@ import {
   ViewChild,
   AfterViewInit,
   OnDestroy,
+  NgZone,
 } from '@angular/core';
-import VanillaTilt from 'vanilla-tilt';
 
 const PIP_POSITIONS: Record<string, [number, number][]> = {
   A: [[2, 3]],
@@ -97,7 +97,7 @@ const PIP_POSITIONS: Record<string, [number, number][]> = {
   styleUrl: './card.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class Card {
+export class Card implements AfterViewInit, OnDestroy {
   value = input<string>();
   suit = input<string>();
   isFlipped = input<boolean>(false);
@@ -108,18 +108,72 @@ export class Card {
 
   @ViewChild('cardContainer') cardContainer!: ElementRef;
 
+  private glareEl!: HTMLElement;
+  private tiltX = 0;
+  private tiltY = 0;
+  private rafId: number | null = null;
+  private el!: HTMLElement;
+
+  constructor(private ngZone: NgZone) {}
+
   ngAfterViewInit() {
-    VanillaTilt.init(this.cardContainer.nativeElement, {
-      max: 18,
-      speed: 1200,
-      glare: true,
-      'max-glare': 0.5,
-      perspective: 600,
-      scale: 1.05,
+    this.el = this.cardContainer.nativeElement;
+
+    this.glareEl = document.createElement('div');
+    this.glareEl.style.cssText = `
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      z-index: 10;
+      opacity: 0;
+      transition: opacity 0.15s ease-out;
+      background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.6) 0%, transparent 70%);
+    `;
+    this.el.appendChild(this.glareEl);
+
+    this.ngZone.runOutsideAngular(() => {
+      this.el.addEventListener('mousemove', this.onMouseMove);
+      this.el.addEventListener('mouseleave', this.onMouseLeave);
     });
   }
 
   ngOnDestroy() {
-    this.cardContainer.nativeElement?.vanillaTilt?.destroy();
+    this.el.removeEventListener('mousemove', this.onMouseMove);
+    this.el.removeEventListener('mouseleave', this.onMouseLeave);
+    if (this.rafId) cancelAnimationFrame(this.rafId);
+    this.glareEl?.remove();
   }
+
+  private onMouseMove = (e: MouseEvent) => {
+    if (this.rafId) cancelAnimationFrame(this.rafId);
+
+    this.rafId = requestAnimationFrame(() => {
+      const rect = this.el.getBoundingClientRect();
+      const relX = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      const relY = ((e.clientY - rect.top) / rect.height) * 2 - 1;
+
+      const maxTilt = 18;
+      this.tiltX = -relY * maxTilt;
+      this.tiltY = relX * maxTilt;
+
+      this.el.style.transform =
+        `perspective(600px) rotateX(${this.tiltX}deg) rotateY(${this.tiltY}deg) scale(1.05)`;
+
+      const glareX = ((e.clientX - rect.left) / rect.width) * 100;
+      const glareY = ((e.clientY - rect.top) / rect.height) * 100;
+      const dist = Math.sqrt(relX * relX + relY * relY) / Math.sqrt(2);
+      const maxGlare = 0.45;
+
+      this.glareEl.style.opacity = (dist * maxGlare).toString();
+      this.glareEl.style.background =
+        `radial-gradient(circle at ${glareX}% ${glareY}%, rgba(255,255,255,0.8) 0%, transparent 65%)`;
+    });
+  };
+
+  private onMouseLeave = () => {
+    if (this.rafId) cancelAnimationFrame(this.rafId);
+    this.el.style.transform = 'perspective(600px) rotateX(0deg) rotateY(0deg) scale(1)';
+    this.glareEl.style.opacity = '0';
+  };
 }
