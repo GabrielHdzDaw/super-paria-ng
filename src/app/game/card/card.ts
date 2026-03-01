@@ -1,4 +1,15 @@
-import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  input,
+  output,
+  ElementRef,
+  ViewChild,
+  AfterViewInit,
+  OnDestroy,
+} from '@angular/core';
+import VanillaTilt from 'vanilla-tilt';
 
 const PIP_POSITIONS: Record<string, [number, number][]> = {
   A: [[2, 3]],
@@ -94,4 +105,21 @@ export class Card {
 
   flipRequest = output<void>();
   pipPositions = computed(() => PIP_POSITIONS[this.value() ?? ''] ?? []);
+
+  @ViewChild('cardContainer') cardContainer!: ElementRef;
+
+  ngAfterViewInit() {
+    VanillaTilt.init(this.cardContainer.nativeElement, {
+      max: 18,
+      speed: 1200,
+      glare: true,
+      'max-glare': 0.5,
+      perspective: 600,
+      scale: 1.05,
+    });
+  }
+
+  ngOnDestroy() {
+    this.cardContainer.nativeElement?.vanillaTilt?.destroy();
+  }
 }
