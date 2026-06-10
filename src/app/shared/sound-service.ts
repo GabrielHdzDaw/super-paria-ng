@@ -24,11 +24,30 @@ export class SoundService {
     flip: new Audio('audio/flip.mp3'),
     applause: new Audio('audio/applause.mp3'),
     gameover: new Audio('audio/gameover.mp3'),
+    gameMusic: new Audio('audio/gameMusic.mp3'),
   };
+
+  private playing: Record<string, HTMLAudioElement[]> = {};
 
   play(sound: keyof typeof this.sounds, volume = 0.2) {
     const audio = this.sounds[sound].cloneNode() as HTMLAudioElement;
     audio.volume = volume;
     audio.play();
+    if (!this.playing[sound]) {
+      this.playing[sound] = [];
+    }
+    this.playing[sound].push(audio);
+    audio.addEventListener('ended', () => {
+      this.playing[sound] = this.playing[sound].filter((a) => a !== audio);
+    });
+  }
+  stop(sound: keyof typeof this.sounds) {
+    if (this.playing[sound]) {
+      this.playing[sound].forEach((audio) => {
+        audio.pause();
+        audio.currentTime = 0;
+      });
+      this.playing[sound] = [];
+    }
   }
 }

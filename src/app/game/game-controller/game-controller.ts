@@ -4,10 +4,11 @@ import { Deck, Suit, Value, CardInterface } from '../interfaces/deck.interface';
 import { ComboComponent } from '../combo-component/combo-component';
 import { Combo } from '../interfaces/combo.interface';
 import { SoundService } from 'src/app/shared/sound-service';
+import { ScoreComponent } from '../score-component/score-component';
 
 @Component({
   selector: 'game-controller',
-  imports: [Card, ComboComponent],
+  imports: [Card, ComboComponent, ScoreComponent],
   templateUrl: './game-controller.html',
   styleUrl: './game-controller.css',
 })
@@ -67,6 +68,7 @@ export class GameController implements OnInit {
   }
 
   constructor() {
+    this.soundService.play('gameMusic', 0.1);
     effect(() => {
       this.flippedIndices();
       if (this.flippedIndices().length === this.gameDeck.length) {
@@ -81,6 +83,7 @@ export class GameController implements OnInit {
       this.timeLeft();
       if (this.timeLeft() <= 0) {
         this.stopTimer();
+        this.soundService.stop('gameMusic');
         this.soundService.play('gameover', 0.1);
       }
     });
@@ -129,7 +132,7 @@ export class GameController implements OnInit {
         this.matchedIndices.update((i) => [...i, this.firstCard()!, index]);
         this.reset();
       } else {
-        if (this.currentCombo() > 2) {
+        if (this.currentCombo() >= 2) {
           this.soundService.play('scratch', 0.1);
         }
         this.currentCombo.set(0);
@@ -182,6 +185,9 @@ export class GameController implements OnInit {
   }
 
   resetGame() {
+    this.soundService.stop('gameMusic');
+    this.soundService.stop('applause');
+    this.soundService.play('gameMusic', 0.1);
     this.stopTimer();
     this.timeLeft.set(93);
     this.currentCombo.set(0);
