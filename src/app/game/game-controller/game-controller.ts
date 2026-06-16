@@ -14,13 +14,15 @@ import { ScoreComponent } from '../score-component/score-component';
 })
 export class GameController implements OnInit {
   soundService = inject(SoundService);
-  readonly CARD_DELAY = 80;
-  readonly ANIMATION_DURATION = 500;
-  readonly PREVIEW_DURATION = 1000;
+  readonly CARD_DELAY: number = 80;
+  readonly ANIMATION_DURATION: number = 500;
+  readonly PREVIEW_DURATION: number = 1000;
   timeLeft = signal<number>(93);
   #timerInterval: ReturnType<typeof setInterval> | null = null;
 
-  scoreTime = 0;
+  gameOver = signal<boolean>(false);
+
+  scoreTime: number = 0;
 
   ngOnInit() {
     this.startDealAnimation();
@@ -77,6 +79,7 @@ export class GameController implements OnInit {
         this.stopTimer();
         this.locked.set(true);
         this.soundService.play('applause', 0.1);
+        this.gameOver.set(true);
       }
     });
     effect(() => {
@@ -185,6 +188,7 @@ export class GameController implements OnInit {
   }
 
   resetGame() {
+    this.gameOver.set(false);
     this.soundService.stop('gameMusic');
     this.soundService.stop('applause');
     this.soundService.play('gameMusic', 0.1);
@@ -202,6 +206,9 @@ export class GameController implements OnInit {
     this.startTimer();
   }
   debug(suit, value) {
-    console.log(suit, value);
+    const debugElement = document.querySelector<HTMLParagraphElement>('.debug');
+    if (debugElement) {
+      debugElement.textContent = `${suit}${value}`;
+    }
   }
 }

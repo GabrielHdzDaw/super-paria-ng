@@ -157,8 +157,7 @@ export class Card implements AfterViewInit, OnDestroy {
       this.tiltX = -relY * maxTilt;
       this.tiltY = relX * maxTilt;
 
-      this.el.style.transform =
-        `perspective(600px) rotateX(${this.tiltX}deg) rotateY(${this.tiltY}deg) scale(1.05)`;
+      this.el.style.transform = `perspective(600px) rotateX(${this.tiltX}deg) rotateY(${this.tiltY}deg) scale(1.05)`;
 
       const glareX = ((e.clientX - rect.left) / rect.width) * 100;
       const glareY = ((e.clientY - rect.top) / rect.height) * 100;
@@ -166,8 +165,7 @@ export class Card implements AfterViewInit, OnDestroy {
       const maxGlare = 0.45;
 
       this.glareEl.style.opacity = (dist * maxGlare).toString();
-      this.glareEl.style.background =
-        `radial-gradient(circle at ${glareX}% ${glareY}%, rgba(255,255,255,0.8) 0%, transparent 65%)`;
+      this.glareEl.style.background = `radial-gradient(circle at ${glareX}% ${glareY}%, rgba(255,255,255,0.8) 0%, transparent 65%)`;
     });
   };
 

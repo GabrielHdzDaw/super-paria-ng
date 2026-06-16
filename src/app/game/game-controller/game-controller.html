@@ -1,5 +1,12 @@
+<!-- <p class="debug text-9xl text-orange-400"></p> -->
 
-<score-component [time]="timeLeft()"></score-component>
+@if (gameOver()) {
+  <score-component
+    [time]="timeLeft()"
+    [gameOver]="gameOver()"
+    [combos]="totalCombos()"
+  ></score-component>
+}
 <div class="absolute inset-0 w-full h-full bg-white z-50" [class.hidden]="!flash()"></div>
 
 <div
