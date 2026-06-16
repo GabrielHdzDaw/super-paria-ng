@@ -1,52 +1,106 @@
-# SuperPariaNg
+# Super Paria NG
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.1.4.
+Jugo de encontrar las parejas tipo arcade. Juega contrarreloj y gana puntos en función del tiempo restante y los combos obtenidos por encontrar parejas de forma consecutiva.
 
-## Development server
+## 🎮 Características
 
-To start a local development server, run:
+- **Juego de Memoria**: Encuentra parejas de cartas en una cuadrícula de 4x4
+- **Sistema de Combos**: Acumula puntuaciones bonus por encontrar parejas consecutivas
+- **Temporizador**: 90 segundos para completar el reto
+- **Efectos Visuales**: Animaciones de las cartas, destellos y vibraciones al encontrar parejas, fondos dinámicos
+- **Audio**: Música de fondo, efectos de sonido y audio de combos
+- **Puntuación Animada**: Animación fluida del score del tiempo y cada combo
+- **Diseño Responsivo**: Interfaz moderna con Tailwind CSS
+- **Cartas generadas automáticamente**: Los dibujos de cada carta se generan, solo hay imágenes de cada palo y figura.
 
-```bash
-ng serve
-```
+## 🚀 Instalación y Desarrollo
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+### Requerimientos
+- Node.js 18+
+- Angular 21
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
+### Clonar e instalar
 
 ```bash
-ng build
+git clone <repositorio>
+cd super-paria-ng
+npm install
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+### Servidor de desarrollo
 
 ```bash
-ng test
+npm start
 ```
 
-## Running end-to-end tests
+Accede a `http://localhost:4200/` en tu navegador. La aplicación se recargará automáticamente con los cambios.
 
-For end-to-end (e2e) testing, run:
+## 🏗️ Estructura del Proyecto
+
+```
+src/app/
+├── app.ts                 # Componente raíz
+├── app.config.ts          # Configuración de Angular
+├── game/                  # Lógica principal del juego
+│   ├── card/              # Componente individual de carta
+│   ├── game-controller/   # Controlador del flujo de juego
+│   ├── score-component/   # Pantalla de puntuación final
+│   ├── combo-component/   # Sistema de combos
+│   └── interfaces/        # Tipos de datos (Combo, Deck)
+└── shared/                # Servicios compartidos
+    ├── sound-service.ts   # Gestión de audio
+    ├── button-component/  # Botón reutilizable
+    └── earthbound-background/  # Fondo animado con tema Earthbound
+```
+
+## 📊 Cómo Jugar
+
+1. Se revelan las carta de juego durante un tiempo
+2. Las cartas se voltearán después de ese tiempo
+3. Haz clic en cartas para encontrar parejas
+4. Cada pareja correcta suma 1 combo al encontrar parejas consecutivamente
+5. Al terminar, se calcula: `(Tiempo Restante × 1000) + (Suma de puntuación de cada combo)`
+6. El score se anima gradualmente hacia el total
+
+## 🧪 Testing
+
+Ejecuta las pruebas con:
+
+```bash
+npm test
+```
+
+Los tests usan Vitest y están ubicados en archivos `.spec.ts` junto a cada componente.
+
+## 🔨 Build
+
+Para producción:
+
+```bash
+npm run build
+```
+
+Los artefactos de build se guardan en `dist/`.
+
+## 🛠️ Tecnologías
+
+- **Angular 21** - Framework principal
+- **TypeScript** - Lenguaje de programación
+- **Tailwind CSS** - Estilos y diseño
+- **Signals** - Gestión de estado reactivo
+- **Vitest** - Testing
+
+## 📝 Convenciones
+
+- Componentes standalone
+- Signals para estado local
+- Control de flujo nativo (`@if`, `@for`)
+- Cambio de detección OnPush
+- Inputs/Outputs como funciones
+
+## 🎨 Créditos
+
+Inspirado en el estilo visual de Earthbound/Mother series.
 
 ```bash
 ng e2e
