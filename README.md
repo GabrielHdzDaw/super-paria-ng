@@ -1,5 +1,7 @@
 # Super Paria NG
 
+![Gameplay del juego](public/img/gameplay.gif)
+
 Jugo de encontrar las parejas tipo arcade. Juega contrarreloj y gana puntos en función del tiempo restante y los combos obtenidos por encontrar parejas de forma consecutiva.
 
 ## 🎮 Características
