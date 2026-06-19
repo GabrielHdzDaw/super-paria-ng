@@ -1,9 +1,21 @@
 @if ((currentCombo() ?? 0) >= 2) {
-  <span
+  <div
     [class.text-red-500]=""
-    class="combo text-7xl text-teal-700 animate-bounce fixed right-1/12 top-1/2 select-none"
+    class="flex flex-col combo text-7xl animate-bounce fixed right-1/12 top-1/2 select-none"
     [style.animationDuration]="animationDuration()"
   >
-    {{ currentComboObject().name }}
-  </span>
+    <div>
+      <span class="text-orange-400">
+        {{ currentComboObject().name }}
+      </span>
+      <span class="text-teal-500">
+        {{ currentComboObject().number }}
+      </span>
+      <span class="text-orange-400"> COMBO </span>
+    </div>
+    <div class="flex gap-1 justify-end">
+      <span class="combo text-4xl text-teal-500"> {{ currentComboObject().score }}</span>
+      <span class="combo text-xl text-orange-400">pts</span>
+    </div>
+  </div>
 }

@@ -4,9 +4,8 @@
   font-family: 'Bebas Neue';
 }
 
-.debug{
-  position: absolute;
-   text-shadow:
+.arcade-style {
+  text-shadow:
     -1px -1px 0 #000,
     1px -1px 0 #000,
     -1px 1px 0 #000,
@@ -88,9 +87,6 @@
   }
 }
 
-
-
 .rumble {
   animation: rumble forwards 0.15s;
 }
-
