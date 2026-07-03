@@ -1,4 +1,4 @@
-@if ((currentCombo() ?? 0) >= 2) {
+@if ((currentCombo() ?? 0) >= 2 && !gameOver()) {
   <div
     [class.text-red-500]=""
     class="flex flex-col combo text-7xl animate-bounce fixed right-1/12 top-1/2 select-none"

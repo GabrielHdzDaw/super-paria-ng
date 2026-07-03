@@ -13,12 +13,12 @@ export class ComboComponent {
 
   comboScores: Combo[] = [
     { name: 'GREAT', number: 2, score: 2000, audio: 'great' },
-    { name: 'COOL', number: 3, score: 3000, audio: 'cool' },
-    { name: 'CRAZY', number: 4, score: 4500, audio: 'crazy' },
-    { name: 'MANIAC', number: 5, score: 6750, audio: 'maniac' },
-    { name: 'INSANE', number: 6, score: 8000, audio: 'insane' },
-    { name: 'SEER', number: 7, score: 9500, audio: 'seer' },
-    { name: 'GODLIKE', number: 8, score: 12000, audio: 'godlike' },
+    { name: 'COOL', number: 3, score: 3250, audio: 'cool' },
+    { name: 'CRAZY', number: 4, score: 5500, audio: 'crazy' },
+    { name: 'MANIAC', number: 5, score: 7750, audio: 'maniac' },
+    { name: 'INSANE', number: 6, score: 9000, audio: 'insane' },
+    { name: 'SEER', number: 7, score: 12500, audio: 'seer' },
+    { name: 'GODLIKE', number: 8, score: 16000, audio: 'godlike' },
   ];
 
   gameOver = input<boolean>(false);
