@@ -29,7 +29,7 @@ export class SoundService {
 
   private playing: Record<string, HTMLAudioElement[]> = {};
 
-  play(sound: keyof typeof this.sounds, volume = 0.2) {
+  play(sound: keyof typeof this.sounds, volume = 0.5) {
     const audio = this.sounds[sound].cloneNode() as HTMLAudioElement;
     audio.volume = volume;
     audio.play();

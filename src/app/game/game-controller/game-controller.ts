@@ -70,7 +70,7 @@ export class GameController implements OnInit {
   }
 
   constructor() {
-    this.soundService.play('gameMusic', 0.1);
+    this.soundService.play('gameMusic', 0.07);
     effect(() => {
       this.flippedIndices();
       if (this.flippedIndices().length === this.gameDeck.length) {
@@ -136,14 +136,14 @@ export class GameController implements OnInit {
         this.reset();
       } else {
         if (this.currentCombo() >= 2) {
-          this.soundService.play('scratch', 0.1);
+          this.soundService.play('scratch', 0.2);
         }
         this.currentCombo.set(0);
         setTimeout(() => {
           this.flippedIndices.update((i) => i.filter((i) => i !== this.firstCard() && i !== index));
           this.soundService.play('flip', 0.1);
           this.reset();
-        }, this.resetDelay());
+        }, this.resetDelay() ?? 600);
       }
     }
   }
