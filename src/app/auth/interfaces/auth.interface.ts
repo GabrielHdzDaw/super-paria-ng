@@ -7,7 +7,7 @@ export interface UserRegister {
   name: string;
   email: string;
   password: string;
-  avatar: string;
+  img: string;
 }
 
 export interface AccessToken {

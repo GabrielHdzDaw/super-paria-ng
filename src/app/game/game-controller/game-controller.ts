@@ -1,4 +1,13 @@
-import { Component, effect, inject, input, OnInit, signal } from '@angular/core';
+import {
+  Component,
+  effect,
+  ElementRef,
+  inject,
+  input,
+  OnInit,
+  signal,
+  ViewChild,
+} from '@angular/core';
 import { Card } from '../card/card';
 import { Deck, Suit, Value, CardInterface } from '../interfaces/deck.interface';
 import { ComboComponent } from '../combo-component/combo-component';
@@ -13,6 +22,8 @@ import { ScoreComponent } from '../score-component/score-component';
   styleUrl: './game-controller.css',
 })
 export class GameController implements OnInit {
+  @ViewChild('gameContainer') gameContainer?: ElementRef<HTMLDivElement>;
+
   soundService = inject(SoundService);
   readonly CARD_DELAY: number = 80;
   readonly ANIMATION_DURATION: number = 500;
@@ -126,6 +137,7 @@ export class GameController implements OnInit {
       if (this.checkMatch(first, second)) {
         this.currentCombo.update((c) => c + 1);
         this.flash.set(true);
+        this.randomizeRumble();
         this.rumble.set(true);
         setTimeout(() => {
           this.flash.set(false);
@@ -205,6 +217,22 @@ export class GameController implements OnInit {
     this.startDealAnimation();
     this.startTimer();
   }
+
+  private randomizeRumble() {
+    const container = this.gameContainer?.nativeElement;
+    if (!container) return;
+
+    for (let i = 1; i <= 10; i++) {
+      container.style.setProperty(`--rumble-x-${i}`, `${this.randomBetween(-9, 9)}px`);
+      container.style.setProperty(`--rumble-y-${i}`, `${this.randomBetween(-9, 9)}px`);
+      container.style.setProperty(`--rumble-r-${i}`, `${this.randomBetween(-3, 3)}deg`);
+    }
+  }
+
+  private randomBetween(min: number, max: number) {
+    return Math.random() * (max - min) + min;
+  }
+
   debug(suit, value) {
     const debugElement = document.querySelector<HTMLParagraphElement>('.debug');
     if (debugElement) {

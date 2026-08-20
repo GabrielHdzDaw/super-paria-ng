@@ -53,34 +53,44 @@
 
 @keyframes rumble {
   0% {
-    transform: translateX(8px) translateY(-6px) rotate(-2deg);
+    transform: translateX(var(--rumble-x-1, 8px)) translateY(var(--rumble-y-1, -6px))
+      rotate(var(--rumble-r-1, -2deg));
   }
   10% {
-    transform: translateX(-7px) translateY(7px) rotate(2deg);
+    transform: translateX(var(--rumble-x-2, -7px)) translateY(var(--rumble-y-2, 7px))
+      rotate(var(--rumble-r-2, 2deg));
   }
   20% {
-    transform: translateX(6px) translateY(-8px) rotate(-1deg);
+    transform: translateX(var(--rumble-x-3, 6px)) translateY(var(--rumble-y-3, -8px))
+      rotate(var(--rumble-r-3, -1deg));
   }
   30% {
-    transform: translateX(-8px) translateY(6px) rotate(1deg);
+    transform: translateX(var(--rumble-x-4, -8px)) translateY(var(--rumble-y-4, 6px))
+      rotate(var(--rumble-r-4, 1deg));
   }
   40% {
-    transform: translateX(7px) translateY(-7px) rotate(-2deg);
+    transform: translateX(var(--rumble-x-5, 7px)) translateY(var(--rumble-y-5, -7px))
+      rotate(var(--rumble-r-5, -2deg));
   }
   50% {
-    transform: translateX(-6px) translateY(8px) rotate(2deg);
+    transform: translateX(var(--rumble-x-6, -6px)) translateY(var(--rumble-y-6, 8px))
+      rotate(var(--rumble-r-6, 2deg));
   }
   60% {
-    transform: translateX(8px) translateY(-6px) rotate(-1deg);
+    transform: translateX(var(--rumble-x-7, 8px)) translateY(var(--rumble-y-7, -6px))
+      rotate(var(--rumble-r-7, -1deg));
   }
   70% {
-    transform: translateX(-7px) translateY(7px) rotate(1deg);
+    transform: translateX(var(--rumble-x-8, -7px)) translateY(var(--rumble-y-8, 7px))
+      rotate(var(--rumble-r-8, 1deg));
   }
   80% {
-    transform: translateX(6px) translateY(-8px) rotate(-2deg);
+    transform: translateX(var(--rumble-x-9, 6px)) translateY(var(--rumble-y-9, -8px))
+      rotate(var(--rumble-r-9, -2deg));
   }
   90% {
-    transform: translateX(-8px) translateY(6px) rotate(2deg);
+    transform: translateX(var(--rumble-x-10, -8px)) translateY(var(--rumble-y-10, 6px))
+      rotate(var(--rumble-r-10, 2deg));
   }
   100% {
     transform: translateX(0px) translateY(0px) rotate(0deg);

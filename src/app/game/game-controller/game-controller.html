@@ -13,6 +13,7 @@
 <div class="absolute inset-0 w-full h-full bg-white z-50" [class.hidden]="!flash()"></div>
 
 <div
+  #gameContainer
   class="game-container select-none"
   [class.rumble]="rumble()"
   (animationend)="rumble.set(false)"

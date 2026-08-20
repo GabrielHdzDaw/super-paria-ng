@@ -1,13 +1,11 @@
-import { Component, signal, AfterViewInit } from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { GameController } from './game/game-controller/game-controller';
 import { EarthboundBgComponent } from './shared/earthbound-background/earthbound-background';
 import { combinations } from './shared/earthbound-background/layer-combos';
-import { MainMenuComponent } from './menu/main-menu-component/main-menu-component';
 
 @Component({
   selector: 'app',
-  imports: [RouterOutlet, GameController, EarthboundBgComponent, MainMenuComponent],
+  imports: [RouterOutlet, EarthboundBgComponent],
   templateUrl: './app.html',
   styleUrl: './app.css',
 })

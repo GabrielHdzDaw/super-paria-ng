@@ -23,23 +23,23 @@ export class AuthService {
     );
   }
 
-  loginGoogle(token: string): Observable<void> {
-    return this.#http.post<AccessToken>('auth/google', { token }).pipe(
-      map((res) => {
-        localStorage.setItem('token', res.accessToken);
-        this.#logged.set(true);
-      }),
-    );
-  }
+  // loginGoogle(token: string): Observable<void> {
+  //   return this.#http.post<AccessToken>('auth/google', { token }).pipe(
+  //     map((res) => {
+  //       localStorage.setItem('token', res.accessToken);
+  //       this.#logged.set(true);
+  //     }),
+  //   );
+  // }
 
-  loginFacebook(token: string): Observable<void> {
-    return this.#http.post<AccessToken>('auth/facebook', { token }).pipe(
-      map((res) => {
-        localStorage.setItem('token', res.accessToken);
-        this.#logged.set(true);
-      }),
-    );
-  }
+  // loginFacebook(token: string): Observable<void> {
+  //   return this.#http.post<AccessToken>('auth/facebook', { token }).pipe(
+  //     map((res) => {
+  //       localStorage.setItem('token', res.accessToken);
+  //       this.#logged.set(true);
+  //     }),
+  //   );
+  // }
 
   register(data: UserRegister): Observable<void> {
     return this.#http.post('auth/register', data).pipe(
