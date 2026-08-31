@@ -15,6 +15,11 @@ export const routes: Routes = [
     path: 'auth',
     loadChildren: () => import('./auth/auth.routes').then((m) => m.authRoutes),
   },
+  {
+    path: 'ranking',
+    loadComponent: () =>
+      import('./ranking/ranking-component/ranking-component').then((m) => m.RankingComponent),
+  },
 
   { path: '', redirectTo: '/', pathMatch: 'full' },
   { path: '**', redirectTo: '/' },

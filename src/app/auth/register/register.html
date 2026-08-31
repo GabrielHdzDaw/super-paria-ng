@@ -1,7 +1,30 @@
+<swal
+  #swalConfirm
+  position="bottom-end"
+  title="Success"
+  text="You registered succesfuly"
+  icon="success"
+  [toast]="true"
+  [timer]="3000"
+  [showConfirmButton]="false"
+  background="#B5FFD1"
+></swal>
+<swal
+  #swalError
+  position="bottom-end"
+  title="Error"
+  text="An error occurred during your registration"
+  icon="error"
+  [toast]="true"
+  [timer]="3000"
+  [showConfirmButton]="false"
+  background="#FFC1B5"
+></swal>
 <div
   class="arcade-style p-3 backdrop-blur-xl max-w-3xl mx-auto rounded-xl shadow-2xl bg-white/20 border-8 border-white w-2xl"
 >
   <div class="text">
+    <h1 class="text-5xl text-center">Register</h1>
     <form class="flex flex-col gap-3" (submit)="submitRegister(); $event.preventDefault()">
       <label class="text-2xl" for="name">Name</label>
       <input
@@ -45,6 +68,8 @@
         Register
       </button>
     </form>
-    <p class="text-2xl">Already have an account? <a [routerLink]="['/auth/login']">Login</a></p>
+    <p class="text-2xl mt-5">
+      Already have an account? <a [routerLink]="['/auth/login']">Login</a>
+    </p>
   </div>
 </div>

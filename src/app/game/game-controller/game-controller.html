@@ -8,6 +8,7 @@
     [time]="timeLeft()"
     [gameOver]="gameOver()"
     [combos]="totalCombos()"
+    (playAgain)="resetGame()"
   ></score-component>
 }
 <div class="absolute inset-0 w-full h-full bg-white z-50" [class.hidden]="!flash()"></div>
@@ -42,17 +43,20 @@
         }
       </div>
     </div>
-    <div class="flex justify-between items-center">
-      <button
-        (click)="resetGame()"
-        class="arcade-style text-5xl text-orange-400 backdrop-blur-xl px-5 py-1 rounded-2xl cursor-pointer hover:scale-105 hover:bg-teal-300 transition-all duration-200"
-      >
-        Reset
-      </button>
-      <span class="arcade-style text-5xl text-orange-400 backdrop-blur-xl px-5 py-1 rounded-2xl"
-        >TIME: <span class="text-teal-500">{{ timeLeft() }}</span></span
-      >
-    </div>
+    @if (!gameOver()) {
+      <div class="flex justify-between items-center">
+        <button
+          (click)="resetGame()"
+          [disabled]="!canReset()"
+          class="arcade-style text-5xl text-orange-400 backdrop-blur-xl px-5 py-1 rounded-2xl cursor-pointer hover:scale-105 hover:bg-teal-300 transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100 disabled:hover:bg-transparent"
+        >
+          Reset
+        </button>
+        <span class="arcade-style text-5xl text-orange-400 backdrop-blur-xl px-5 py-1 rounded-2xl"
+          >TIME: <span class="text-teal-500">{{ timeLeft() }}</span></span
+        >
+      </div>
+    }
   </div>
   <combo-component
     [currentCombo]="currentCombo()"

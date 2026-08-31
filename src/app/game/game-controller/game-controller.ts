@@ -1,4 +1,5 @@
 import {
+  ChangeDetectionStrategy,
   Component,
   effect,
   ElementRef,
@@ -14,17 +15,25 @@ import { ComboComponent } from '../combo-component/combo-component';
 import { Combo } from '../interfaces/combo.interface';
 import { SoundService } from 'src/app/shared/sound-service';
 import { ScoreComponent } from '../score-component/score-component';
+import { RankingService } from 'src/app/ranking/services/ranking-service';
+import { UserService } from 'src/app/shared/services/user-service';
+import { User } from 'src/app/shared/interfaces/user.interface';
 
 @Component({
   selector: 'game-controller',
   imports: [Card, ComboComponent, ScoreComponent],
   templateUrl: './game-controller.html',
   styleUrl: './game-controller.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GameController implements OnInit {
   @ViewChild('gameContainer') gameContainer?: ElementRef<HTMLDivElement>;
 
   soundService = inject(SoundService);
+  #rankingService = inject(RankingService);
+  #userService = inject(UserService);
+
+  user = signal<User | undefined>(undefined);
   readonly CARD_DELAY: number = 80;
   readonly ANIMATION_DURATION: number = 500;
   readonly PREVIEW_DURATION: number = 1000;
@@ -32,10 +41,12 @@ export class GameController implements OnInit {
   #timerInterval: ReturnType<typeof setInterval> | null = null;
 
   gameOver = signal<boolean>(false);
+  canReset = signal<boolean>(false);
 
   scoreTime: number = 0;
 
   ngOnInit() {
+    this.#userService.getUser().subscribe((user) => this.user.set(user));
     this.startDealAnimation();
     this.startTimer();
   }
@@ -101,6 +112,20 @@ export class GameController implements OnInit {
         this.soundService.play('gameover', 0.1);
       }
     });
+    effect(() => {
+      this.canReset.set(!this.dealAnimationActive());
+    });
+    effect((onCleanup) => {
+      const userId = this.user()?.id;
+      if (!this.gameOver() || userId === undefined) return;
+
+      const totalScore = this.calculateTotalScore();
+      const sendScoreTimeout = setTimeout(() => {
+        this.#rankingService.sendScore(userId, totalScore).subscribe();
+      });
+
+      onCleanup(() => clearTimeout(sendScoreTimeout));
+    });
   }
 
   deck: Deck = {
@@ -164,6 +189,12 @@ export class GameController implements OnInit {
     return cardA.suit === cardB.suit && cardA.value === cardB.value;
   }
 
+  calculateTotalScore(): number {
+    const comboScore = this.totalCombos().reduce((total, combo) => total + combo.score, 0);
+
+    return this.scoreTime * 1000 + comboScore;
+  }
+
   addCombo(combo: Combo) {
     this.totalCombos.update((c) => [...c, combo]);
   }
@@ -200,22 +231,24 @@ export class GameController implements OnInit {
   }
 
   resetGame() {
-    this.gameOver.set(false);
-    this.soundService.stop('gameMusic');
-    this.soundService.stop('applause');
-    this.soundService.play('gameMusic', 0.1);
-    this.stopTimer();
-    this.timeLeft.set(93);
-    this.currentCombo.set(0);
-    this.totalCombos.set([]);
-    this.matchedIndices.set([]);
-    this.flippedIndices.set([]);
-    this.firstCard.set(null);
-    this.secondCard.set(null);
-    this.locked.set(false);
-    this.gameDeck = this.generateGameDeck(this.deck);
-    this.startDealAnimation();
-    this.startTimer();
+    if (this.canReset()) {
+      this.gameOver.set(false);
+      this.soundService.stop('gameMusic');
+      this.soundService.stop('applause');
+      this.soundService.play('gameMusic', 0.1);
+      this.stopTimer();
+      this.timeLeft.set(93);
+      this.currentCombo.set(0);
+      this.totalCombos.set([]);
+      this.matchedIndices.set([]);
+      this.flippedIndices.set([]);
+      this.firstCard.set(null);
+      this.secondCard.set(null);
+      this.locked.set(false);
+      this.gameDeck = this.generateGameDeck(this.deck);
+      this.startDealAnimation();
+      this.startTimer();
+    }
   }
 
   private randomizeRumble() {

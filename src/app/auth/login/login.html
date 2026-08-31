@@ -1,8 +1,58 @@
+<swal
+  #swalConfirm
+  position="bottom-end"
+  title="Success"
+  text="You logged in succesfuly"
+  icon="success"
+  [toast]="true"
+  [timer]="3000"
+  [showConfirmButton]="false"
+  background="#B5FFD1"
+></swal>
+<swal
+  #swalError
+  position="bottom-end"
+  title="Error"
+  text="An error occurred while logging in"
+  icon="error"
+  [toast]="true"
+  [timer]="3000"
+  [showConfirmButton]="false"
+  background="#FFC1B5"
+></swal>
 <div
   class="arcade-style p-3 backdrop-blur-xl max-w-3xl mx-auto rounded-xl shadow-2xl bg-white/20 border-8 border-white w-2xl"
 >
   <div class="text">
-    <form action=""></form>
-    <p class="text-2xl">You don't have an account? <a [routerLink]="['/auth/register']">Register</a></p>
+    <h1 class="text-5xl text-center">Login</h1>
+    <form action="">
+      <form class="flex flex-col gap-3" (submit)="submitLogin(); $event.preventDefault()">
+        <label class="text-2xl" for="email">Email</label>
+        <input
+          id="email"
+          type="email"
+          [formField]="loginForm.email"
+          class="text-xl px-3 py-2 rounded-lg border-2 border-white/70 bg-white/90"
+        />
+
+        <label class="text-2xl" for="password">Password</label>
+        <input
+          id="password"
+          type="password"
+          [formField]="loginForm.password"
+          class="text-xl px-3 py-2 rounded-lg border-2 border-white/70 bg-white/90"
+        />
+
+        <button
+          type="submit"
+          class="mt-2 text-3xl text-orange-400 bg-white/80 hover:bg-teal-200 px-4 py-2 rounded-xl transition-all cursor-pointer"
+        >
+          Login
+        </button>
+      </form>
+    </form>
+    <p class="text-2xl mt-5">
+      You don't have an account? <a [routerLink]="['/auth/register']">Register</a>
+    </p>
   </div>
 </div>

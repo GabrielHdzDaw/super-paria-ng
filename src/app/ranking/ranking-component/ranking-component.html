@@ -1,1 +1,44 @@
-<p>ranking-component works!</p>
+<div class="arcade-style min-h-full overflow-y-auto px-4 py-8">
+  <a
+    [routerLink]="['/']"
+    aria-label="Volver al menú"
+    title="Volver al menú"
+    class="inline-block cursor-pointer text-6xl leading-none text-teal-400 transition-transform hover:scale-110 hover:text-teal-300"
+  >
+    ←
+  </a>
+
+  <section
+    class="arcade-style mx-auto max-w-3xl rounded-xl border-8 border-white bg-white/20 p-4 text-teal-400 shadow-2xl backdrop-blur-xl sm:p-8"
+    aria-labelledby="ranking-title"
+  >
+    <h1 id="ranking-title" class="mb-6 text-center text-5xl text-orange-400 sm:text-7xl">
+      Score ranking
+    </h1>
+
+    @if (scoresResource.isLoading()) {
+      <p class="text-center text-3xl" aria-live="polite">Loading scores...</p>
+    } @else if (scoresResource.error()) {
+      <p class="text-center text-3xl text-orange-400" role="alert">Could not load the ranking.</p>
+    } @else if (!ranking().length) {
+      <p class="text-center text-3xl">No scores yet.</p>
+    } @else {
+      <ol class="grid gap-4">
+        @for (entry of ranking(); track entry.id; let position = $index) {
+          <li
+            class="grid grid-cols-[2.5rem_3rem_1fr_auto] items-center gap-3 rounded-xl border-4 border-white/70 bg-white/20 px-3 py-2 text-3xl sm:grid-cols-[3rem_4rem_1fr_auto] sm:gap-4 sm:px-4 sm:py-3 sm:text-4xl"
+          >
+            <span class="text-center text-orange-400" aria-hidden="true">{{ position + 1 }}</span>
+            <img
+              [src]="entry.user.img"
+              [alt]="'Avatar de ' + entry.user.name"
+              class="h-12 w-12 rounded-full border-2 border-teal-400 object-cover sm:h-16 sm:w-16"
+            />
+            <span>{{ entry.user.name }}</span>
+            <strong class="text-orange-400">{{ entry.score }}</strong>
+          </li>
+        }
+      </ol>
+    }
+  </section>
+</div>

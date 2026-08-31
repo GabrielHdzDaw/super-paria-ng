@@ -5,13 +5,15 @@ import {
   effect,
   inject,
   input,
+  output,
   signal,
 } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { Combo } from '../interfaces/combo.interface';
 
 @Component({
   selector: 'score-component',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './score-component.html',
   styleUrl: './score-component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -22,6 +24,7 @@ export class ScoreComponent {
   totalScore = signal<number>(0);
   displayedTime = signal<number>(0);
   gameOver = input<boolean>(false);
+  playAgain = output<void>();
   #destroyRef = inject(DestroyRef);
   #scoreInterval: ReturnType<typeof setInterval> | null = null;
   #scoreTimeout: ReturnType<typeof setTimeout> | null = null;

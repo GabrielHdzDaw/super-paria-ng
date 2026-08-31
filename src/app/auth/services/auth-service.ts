@@ -8,7 +8,7 @@ import { UserLogin, UserRegister, AccessToken } from '../interfaces/auth.interfa
 })
 export class AuthService {
   #http = inject(HttpClient);
-  #logged: WritableSignal<boolean> = signal<boolean>(!!localStorage.getItem('token'));
+  #logged: WritableSignal<boolean> = signal<boolean>(!!localStorage.getItem('accessToken'));
 
   getLogged(): Signal<boolean> {
     return this.#logged.asReadonly();
@@ -17,7 +17,7 @@ export class AuthService {
   login(data: UserLogin): Observable<void> {
     return this.#http.post<AccessToken>('auth/login', data).pipe(
       map((res) => {
-        localStorage.setItem('token', res.accessToken);
+        localStorage.setItem('accessToken', res.accessToken);
         this.#logged.set(true);
       }),
     );
@@ -54,7 +54,7 @@ export class AuthService {
   }
 
   isLogged(): Observable<boolean> {
-    if (!localStorage.getItem('token') && !this.getLogged()()) {
+    if (!localStorage.getItem('accessToken') && !this.getLogged()()) {
       return of(false);
     }
 
@@ -66,14 +66,14 @@ export class AuthService {
         return true;
       }),
       catchError(() => {
-        localStorage.removeItem('token');
+        localStorage.removeItem('accessToken');
         return of(false);
       }),
     );
   }
 
   logout(): void {
-    localStorage.removeItem('token');
+    localStorage.removeItem('accessToken');
     this.#logged.set(false);
   }
 }

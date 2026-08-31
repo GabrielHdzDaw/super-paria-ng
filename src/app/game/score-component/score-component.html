@@ -28,4 +28,20 @@
       </div>
     }
   </div>
+  <div class="flex flex-wrap justify-center gap-5">
+    <button
+      type="button"
+      (click)="playAgain.emit()"
+      class="arcade-style cursor-pointer rounded-2xl px-5 py-1 text-5xl text-orange-400 backdrop-blur-xl transition-all duration-200 hover:scale-105 hover:bg-teal-300"
+    >
+      Play again
+    </button>
+    <button
+      type="button"
+      [routerLink]="['/']"
+      class="arcade-style cursor-pointer rounded-2xl px-5 py-1 text-5xl text-orange-400 backdrop-blur-xl transition-all duration-200 hover:scale-105 hover:bg-teal-300"
+    >
+      Main menu
+    </button>
+  </div>
 </div>
