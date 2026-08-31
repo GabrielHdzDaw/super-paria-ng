@@ -18,6 +18,7 @@ import { ScoreComponent } from '../score-component/score-component';
 import { RankingService } from 'src/app/ranking/services/ranking-service';
 import { UserService } from 'src/app/shared/services/user-service';
 import { User } from 'src/app/shared/interfaces/user.interface';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'game-controller',
@@ -32,6 +33,7 @@ export class GameController implements OnInit {
   soundService = inject(SoundService);
   #rankingService = inject(RankingService);
   #userService = inject(UserService);
+  #router = inject(Router);
 
   user = signal<User | undefined>(undefined);
   readonly CARD_DELAY: number = 80;
@@ -264,6 +266,11 @@ export class GameController implements OnInit {
 
   private randomBetween(min: number, max: number) {
     return Math.random() * (max - min) + min;
+  }
+
+  goToMainMenu() {
+    this.soundService.stop('gameMusic');
+    this.#router.navigate(['/']);
   }
 
   debug(suit, value) {

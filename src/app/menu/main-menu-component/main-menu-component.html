@@ -1,7 +1,17 @@
 <div>
+  <div class="flex justify-center px-6 pt-6">
+    <img
+      ngSrc="img/logo.png"
+      width="672"
+      height="377"
+      priority
+      alt="Super Paria"
+      class="logo-float h-auto w-full max-w-2xl object-contain"
+    />
+  </div>
   <div
     id="userData"
-    class="arcade-style flex items-center justify-end gap-4 px-6 py-3 text-2xl text-teal-400"
+    class="arcade-style absolute top-0 right-0 z-10 flex items-center justify-end gap-4 px-4 py-3 text-2xl text-teal-400 sm:px-6"
   >
     @if (user()) {
       <img

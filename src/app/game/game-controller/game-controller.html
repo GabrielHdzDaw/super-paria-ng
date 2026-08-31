@@ -30,6 +30,7 @@
             class="card-anim-wrapper"
             [class.deal-anim]="dealAnimationActive()"
             [style.animationDelay]="$index * 0.08 + 's'"
+            [style.--float-delay]="$index * -0.7 + 's'"
           >
             <card
               [matched]="matchedIndices().includes($index)"
@@ -51,6 +52,13 @@
           class="arcade-style text-5xl text-orange-400 backdrop-blur-xl px-5 py-1 rounded-2xl cursor-pointer hover:scale-105 hover:bg-teal-300 transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:scale-100 disabled:hover:bg-transparent"
         >
           Reset
+        </button>
+        <button
+          type="button"
+          (click)="goToMainMenu()"
+          class="arcade-style cursor-pointer rounded-2xl px-5 py-1 text-5xl text-orange-400 backdrop-blur-xl transition-all duration-200 hover:scale-105 hover:bg-teal-300"
+        >
+          Main menu
         </button>
         <span class="arcade-style text-5xl text-orange-400 backdrop-blur-xl px-5 py-1 rounded-2xl"
           >TIME: <span class="text-teal-500">{{ timeLeft() }}</span></span

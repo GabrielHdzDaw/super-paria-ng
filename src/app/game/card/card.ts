@@ -8,7 +8,6 @@ import {
   ViewChild,
   AfterViewInit,
   OnDestroy,
-  NgZone,
 } from '@angular/core';
 
 const PIP_POSITIONS: Record<string, [number, number][]> = {
@@ -114,8 +113,6 @@ export class Card implements AfterViewInit, OnDestroy {
   private rafId: number | null = null;
   private el!: HTMLElement;
 
-  constructor(private ngZone: NgZone) {}
-
   ngAfterViewInit() {
     this.el = this.cardContainer.nativeElement;
 
@@ -131,21 +128,14 @@ export class Card implements AfterViewInit, OnDestroy {
       background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.6) 0%, transparent 70%);
     `;
     this.el.appendChild(this.glareEl);
-
-    this.ngZone.runOutsideAngular(() => {
-      this.el.addEventListener('mousemove', this.onMouseMove);
-      this.el.addEventListener('mouseleave', this.onMouseLeave);
-    });
   }
 
   ngOnDestroy() {
-    this.el.removeEventListener('mousemove', this.onMouseMove);
-    this.el.removeEventListener('mouseleave', this.onMouseLeave);
     if (this.rafId) cancelAnimationFrame(this.rafId);
     this.glareEl?.remove();
   }
 
-  private onMouseMove = (e: MouseEvent) => {
+  onPointerMove = (e: PointerEvent) => {
     if (this.rafId) cancelAnimationFrame(this.rafId);
 
     this.rafId = requestAnimationFrame(() => {
@@ -169,7 +159,7 @@ export class Card implements AfterViewInit, OnDestroy {
     });
   };
 
-  private onMouseLeave = () => {
+  onPointerLeave = () => {
     if (this.rafId) cancelAnimationFrame(this.rafId);
     this.el.style.transform = 'perspective(600px) rotateX(0deg) rotateY(0deg) scale(1)';
     this.glareEl.style.opacity = '0';

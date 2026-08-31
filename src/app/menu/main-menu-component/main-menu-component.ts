@@ -1,3 +1,4 @@
+import { NgOptimizedImage } from '@angular/common';
 import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
@@ -8,7 +9,7 @@ import { UserService } from 'src/app/shared/services/user-service';
 
 @Component({
   selector: 'main-menu-component',
-  imports: [RouterLink],
+  imports: [RouterLink, NgOptimizedImage],
   templateUrl: './main-menu-component.html',
   styleUrl: './main-menu-component.css',
 })

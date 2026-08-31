@@ -16,3 +16,81 @@
   font-family: 'Bebas Neue', sans-serif;
   z-index: 2;
 }
+
+.logo-float {
+  animation: logo-float 20s linear infinite;
+  will-change: transform;
+}
+
+@keyframes logo-float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+
+  6.25% {
+    transform: translate3d(0.14rem, -0.14rem, 0) rotate(0.1deg);
+  }
+
+  12.5% {
+    transform: translate3d(0.25rem, -0.25rem, 0) rotate(0.18deg);
+  }
+
+  18.75% {
+    transform: translate3d(0.35rem, -0.1rem, 0) rotate(0.28deg);
+  }
+
+  25% {
+    transform: translate3d(0.38rem, 0, 0) rotate(0.3deg);
+  }
+
+  31.25% {
+    transform: translate3d(0.35rem, 0.1rem, 0) rotate(0.28deg);
+  }
+
+  37.5% {
+    transform: translate3d(0.25rem, 0.25rem, 0) rotate(0.18deg);
+  }
+
+  43.75% {
+    transform: translate3d(0.14rem, 0.35rem, 0) rotate(0.1deg);
+  }
+
+  50% {
+    transform: translate3d(0, 0.38rem, 0) rotate(0deg);
+  }
+
+  56.25% {
+    transform: translate3d(-0.14rem, 0.35rem, 0) rotate(-0.1deg);
+  }
+
+  62.5% {
+    transform: translate3d(-0.25rem, 0.25rem, 0) rotate(-0.18deg);
+  }
+
+  68.75% {
+    transform: translate3d(-0.35rem, 0.1rem, 0) rotate(-0.28deg);
+  }
+
+  75% {
+    transform: translate3d(-0.38rem, 0, 0) rotate(-0.3deg);
+  }
+
+  81.25% {
+    transform: translate3d(-0.35rem, -0.1rem, 0) rotate(-0.28deg);
+  }
+
+  87.5% {
+    transform: translate3d(-0.25rem, -0.25rem, 0) rotate(-0.18deg);
+  }
+
+  93.75% {
+    transform: translate3d(-0.14rem, -0.35rem, 0) rotate(-0.1deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo-float {
+    animation: none;
+  }
+}

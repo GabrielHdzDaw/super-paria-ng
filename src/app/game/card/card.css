@@ -25,6 +25,36 @@
 }
 :host {
   display: block;
+  animation: card-float 14s ease-in-out infinite;
+  animation-delay: var(--float-delay, 0s);
+  will-change: translate, rotate;
+}
+
+:host:hover {
+  animation-play-state: paused !important;
+}
+
+@keyframes card-float {
+  0%,
+  100% {
+    translate: 0 0;
+    rotate: 0deg;
+  }
+
+  25% {
+    translate: 0.12rem -0.16rem;
+    rotate: 0.18deg;
+  }
+
+  50% {
+    translate: -0.14rem 0.1rem;
+    rotate: -0.2deg;
+  }
+
+  75% {
+    translate: 0.08rem 0.14rem;
+    rotate: 0.12deg;
+  }
 }
 
 .card-container {
@@ -81,4 +111,10 @@
 
 .card-front {
   transform: rotateY(180deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :host {
+    animation: none;
+  }
 }

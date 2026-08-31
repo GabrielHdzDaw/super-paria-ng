@@ -8,12 +8,12 @@ import {
   output,
   signal,
 } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { Combo } from '../interfaces/combo.interface';
 
 @Component({
   selector: 'score-component',
-  imports: [RouterLink],
+  imports: [],
   templateUrl: './score-component.html',
   styleUrl: './score-component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -25,6 +25,7 @@ export class ScoreComponent {
   displayedTime = signal<number>(0);
   gameOver = input<boolean>(false);
   playAgain = output<void>();
+  #router = inject(Router);
   #destroyRef = inject(DestroyRef);
   #scoreInterval: ReturnType<typeof setInterval> | null = null;
   #scoreTimeout: ReturnType<typeof setTimeout> | null = null;
@@ -134,5 +135,9 @@ export class ScoreComponent {
   clearScoreTimers() {
     this.clearScoreInterval();
     this.clearScoreTimeout();
+  }
+
+  goToMainMenu() {
+    this.#router.navigate(['/']);
   }
 }

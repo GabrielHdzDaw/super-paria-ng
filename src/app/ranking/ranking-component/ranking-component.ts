@@ -1,9 +1,12 @@
 import { httpResource } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, linkedSignal, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { forkJoin } from 'rxjs';
-import { UserService } from 'src/app/shared/services/user-service';
 import { Score } from '../interfaces/score.interface';
+
+interface RankingPage {
+  scores: Score[];
+  hasNextPage: boolean;
+}
 
 @Component({
   selector: 'ranking-component',
@@ -13,26 +16,36 @@ import { Score } from '../interfaces/score.interface';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RankingComponent {
-  #userService = inject(UserService);
+  readonly pageSize = 4;
+  page = signal(1);
 
-  scoresResource = httpResource<Score[]>(() => 'ranking');
-  ranking = signal<Score[]>([]);
+  scoresResource = httpResource<RankingPage | Score[]>(
+    () => `ranking?page=${this.page()}&limit=${this.pageSize}`,
+  );
+  ranking = linkedSignal<RankingPage | Score[] | undefined, Score[]>({
+    source: () => this.scoresResource.value(),
+    computation: (response, previous) =>
+      (Array.isArray(response) ? response : response?.scores) ?? previous?.value ?? [],
+  });
 
-  constructor() {
-    effect((onCleanup) => {
-      const scores = this.scoresResource.value();
-      if (!scores?.length) {
-        this.ranking.set([]);
-        return;
-      }
+  loadPreviousPage() {
+    if (this.scoresResource.isLoading() || !this.hasPreviousPage()) return;
+    this.page.update((page) => page - 1);
+  }
 
-      const subscription = forkJoin(
-        scores.map((score) => this.#userService.getUserById(score.user.id)),
-      ).subscribe((users) => {
-        this.ranking.set(scores.map((score, index) => ({ ...score, user: users[index] })));
-      });
+  loadNextPage() {
+    if (this.scoresResource.isLoading() || !this.hasNextPage()) return;
+    this.page.update((page) => page + 1);
+  }
 
-      onCleanup(() => subscription.unsubscribe());
-    });
+  hasPreviousPage() {
+    return this.page() > 1;
+  }
+
+  hasNextPage() {
+    const response = this.scoresResource.value();
+    return Array.isArray(response)
+      ? response.length === this.pageSize
+      : (response?.hasNextPage ?? false);
   }
 }
