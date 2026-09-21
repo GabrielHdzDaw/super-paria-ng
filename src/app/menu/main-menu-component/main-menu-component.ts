@@ -1,11 +1,9 @@
 import { NgOptimizedImage } from '@angular/common';
-import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterLink } from '@angular/router';
-import { of, switchMap } from 'rxjs';
 import { AuthService } from 'src/app/auth/services/auth-service';
-import { User } from 'src/app/shared/interfaces/user.interface';
-import { UserService } from 'src/app/shared/services/user-service';
+import { SoundService } from 'src/app/shared/sound-service';
 
 @Component({
   selector: 'main-menu-component',
@@ -13,29 +11,20 @@ import { UserService } from 'src/app/shared/services/user-service';
   templateUrl: './main-menu-component.html',
   styleUrl: './main-menu-component.css',
 })
-export class MainMenuComponent {
+export class MainMenuComponent implements OnInit {
+  soundService = inject(SoundService);
   #authService = inject(AuthService);
   #destroyRef = inject(DestroyRef);
-  #userService = inject(UserService);
 
-  user = signal<User | undefined>(undefined);
+  user = this.#authService.getUser();
 
-  isLogged = this.#authService
-    .isLogged()
-    .pipe(
-      switchMap((logged) => (logged ? this.#userService.getUser() : of(undefined))),
-      takeUntilDestroyed(this.#destroyRef),
-    )
-    .subscribe({
-      next: (user) => {
-        console.log(user);
-        this.user.set(user);
-      },
-      error: () => this.user.set(undefined),
-    });
+  isLogged = this.#authService.isLogged().pipe(takeUntilDestroyed(this.#destroyRef)).subscribe();
+
+  ngOnInit(): void {
+    this.soundService.stop('gameMusic');
+  }
 
   logout() {
     this.#authService.logout();
-    this.user.set(undefined);
   }
 }

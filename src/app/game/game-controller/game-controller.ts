@@ -1,14 +1,17 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  DestroyRef,
   effect,
   ElementRef,
   inject,
   input,
   OnInit,
+  OnDestroy,
   signal,
   ViewChild,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Card } from '../card/card';
 import { Deck, Suit, Value, CardInterface } from '../interfaces/deck.interface';
 import { ComboComponent } from '../combo-component/combo-component';
@@ -27,13 +30,15 @@ import { Router } from '@angular/router';
   styleUrl: './game-controller.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class GameController implements OnInit {
+export class GameController implements OnInit, OnDestroy {
   @ViewChild('gameContainer') gameContainer?: ElementRef<HTMLDivElement>;
 
   soundService = inject(SoundService);
   #rankingService = inject(RankingService);
   #userService = inject(UserService);
   #router = inject(Router);
+  #destroyRef = inject(DestroyRef);
+  #timeouts = new Set<ReturnType<typeof setTimeout>>();
 
   user = signal<User | undefined>(undefined);
   readonly CARD_DELAY: number = 80;
@@ -47,10 +52,23 @@ export class GameController implements OnInit {
 
   scoreTime: number = 0;
 
-  ngOnInit() {
-    this.#userService.getUser().subscribe((user) => this.user.set(user));
+  async ngOnInit() {
+    this.#userService
+      .getUser()
+      .pipe(takeUntilDestroyed(this.#destroyRef))
+      .subscribe((user) => this.user.set(user));
+
+    await this.#preloadCardImages();
+    if (this.#destroyRef.destroyed) return;
+
     this.startDealAnimation();
     this.startTimer();
+  }
+
+  ngOnDestroy() {
+    this.stopTimer();
+    this.#clearTimeouts();
+    this.soundService.stop('gameMusic');
   }
 
   suits: Suit[] = ['S', 'H', 'D', 'C'];
@@ -77,6 +95,7 @@ export class GameController implements OnInit {
   rumble = signal<boolean>(false);
 
   startTimer() {
+    this.stopTimer();
     this.#timerInterval = setInterval(() => {
       this.timeLeft.update((t) => t - 1);
       if (this.timeLeft() === 0) {
@@ -142,6 +161,26 @@ export class GameController implements OnInit {
     return [...selected, ...selected].sort(() => Math.random() - 0.5);
   }
 
+  #preloadCardImages(): Promise<void> {
+    const imageUrls = [
+      ...this.suits.map((suit) => `suits/${suit}.png`),
+      ...this.suits.flatMap((suit) =>
+        ['J', 'Q', 'K'].map((value) => `figures/${suit}${value}.png`),
+      ),
+    ];
+
+    return Promise.all(imageUrls.map((url) => this.#preloadImage(url))).then(() => undefined);
+  }
+
+  #preloadImage(url: string): Promise<void> {
+    return new Promise((resolve) => {
+      const image = new Image();
+      image.onload = () => resolve();
+      image.onerror = () => resolve();
+      image.src = url;
+    });
+  }
+
   flipCard(index: number) {
     if (this.locked()) return;
     if (this.matchedIndices().includes(index)) return;
@@ -150,15 +189,15 @@ export class GameController implements OnInit {
     this.soundService.play('flip', 0.1);
 
     if (this.firstCard() === null) {
-      this.soundService.play('flip', 0.1);
       this.firstCard.set(index);
       this.flippedIndices.update((i) => [...i, index]);
     } else {
+      const firstIndex = this.firstCard();
       this.secondCard.set(index);
       this.flippedIndices.update((i) => [...i, index]);
       this.locked.set(true);
 
-      const first = this.gameDeck[this.firstCard()!];
+      const first = this.gameDeck[firstIndex!];
       const second = this.gameDeck[index];
 
       if (this.checkMatch(first, second)) {
@@ -166,12 +205,12 @@ export class GameController implements OnInit {
         this.flash.set(true);
         this.randomizeRumble();
         this.rumble.set(true);
-        setTimeout(() => {
+        this.#scheduleTimeout(() => {
           this.flash.set(false);
         }, 50);
 
         this.soundService.play('match', 0.1);
-        this.matchedIndices.update((i) => [...i, this.firstCard()!, index]);
+        this.matchedIndices.update((i) => [...i, firstIndex!, index]);
         this.reset();
       } else {
         if (this.currentCombo() >= 2) {
@@ -179,7 +218,9 @@ export class GameController implements OnInit {
         }
         this.currentCombo.set(0);
         setTimeout(() => {
-          this.flippedIndices.update((i) => i.filter((i) => i !== this.firstCard() && i !== index));
+          this.flippedIndices.update((i) =>
+            i.filter((cardIndex) => cardIndex !== firstIndex && cardIndex !== index),
+          );
           this.soundService.play('flip', 0.1);
           this.reset();
         }, this.resetDelay() ?? 600);
@@ -202,25 +243,26 @@ export class GameController implements OnInit {
   }
 
   startDealAnimation() {
+    this.#clearTimeouts();
     this.dealAnimationActive.set(true);
     this.previewActive.set(false);
     for (let i = 0; i < this.gameDeck.length; i++) {
-      setTimeout(() => {
+      this.#scheduleTimeout(() => {
         this.soundService.play('flip', 0.1);
       }, i * this.CARD_DELAY);
     }
 
     const dealDuration = (this.gameDeck.length - 1) * this.CARD_DELAY + this.ANIMATION_DURATION;
 
-    setTimeout(() => {
+    this.#scheduleTimeout(() => {
       this.previewActive.set(true);
       this.soundService.play('flip', 0.1);
     }, dealDuration);
 
-    setTimeout(() => {
+    this.#scheduleTimeout(() => {
       this.previewActive.set(false);
       this.soundService.play('flip', 0.1);
-      setTimeout(() => {
+      this.#scheduleTimeout(() => {
         this.dealAnimationActive.set(false);
       }, 500);
     }, dealDuration + this.PREVIEW_DURATION);
@@ -266,6 +308,19 @@ export class GameController implements OnInit {
 
   private randomBetween(min: number, max: number) {
     return Math.random() * (max - min) + min;
+  }
+
+  #scheduleTimeout(callback: () => void, delay: number) {
+    const timeout = setTimeout(() => {
+      this.#timeouts.delete(timeout);
+      callback();
+    }, delay);
+    this.#timeouts.add(timeout);
+  }
+
+  #clearTimeouts() {
+    this.#timeouts.forEach((timeout) => clearTimeout(timeout));
+    this.#timeouts.clear();
   }
 
   goToMainMenu() {

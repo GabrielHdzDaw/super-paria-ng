@@ -4,7 +4,7 @@
   id="parallax-main"
   class="flex md:items-center items-start justify-center min-h-screen w-full"
 >
-  <router-outlet></router-outlet>
-  <!-- <game-controller [resetDelay]="600"></game-controller> -->
-  <!-- <main-menu-component></main-menu-component> -->
+  <div [class]="'app-shell shell-' + shellMode()">
+    <router-outlet></router-outlet>
+  </div>
 </main>

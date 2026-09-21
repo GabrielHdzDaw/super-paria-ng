@@ -1,5 +1,7 @@
-import { AfterViewInit, Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { AfterViewInit, Component, computed, inject } from '@angular/core';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { filter, map } from 'rxjs';
 import { EarthboundBgComponent } from './shared/earthbound-background/earthbound-background';
 import { combinations } from './shared/earthbound-background/layer-combos';
 
@@ -10,6 +12,23 @@ import { combinations } from './shared/earthbound-background/layer-combos';
   styleUrl: './app.css',
 })
 export class App implements AfterViewInit {
+  #router = inject(Router);
+  #currentUrl = toSignal(
+    this.#router.events.pipe(
+      filter((event) => event instanceof NavigationEnd),
+      map((event) => event.urlAfterRedirects),
+    ),
+    { initialValue: this.#router.url },
+  );
+  shellMode = computed(() => {
+    const url = this.#currentUrl();
+    if (url.startsWith('/play')) return 'game';
+    if (url.startsWith('/ranking')) return 'ranking';
+    if (url.startsWith('/auth/register')) return 'register';
+    if (url.startsWith('/auth/login')) return 'login';
+    return 'menu';
+  });
+
   layerCombination = combinations[Math.floor(Math.random() * (combinations.length - 1))];
   layer1 = this.layerCombination.layer1;
   layer2 = this.layerCombination.layer2;

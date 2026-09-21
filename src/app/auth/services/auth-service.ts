@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, Signal, signal, WritableSignal } from '@angular/core';
-import { catchError, map, Observable, of } from 'rxjs';
+import { catchError, map, Observable, of, switchMap, tap } from 'rxjs';
 import { UserLogin, UserRegister, AccessToken } from '../interfaces/auth.interface';
+import { User } from 'src/app/shared/interfaces/user.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -9,17 +10,27 @@ import { UserLogin, UserRegister, AccessToken } from '../interfaces/auth.interfa
 export class AuthService {
   #http = inject(HttpClient);
   #logged: WritableSignal<boolean> = signal<boolean>(!!localStorage.getItem('accessToken'));
+  #user: WritableSignal<User | undefined> = signal<User | undefined>(undefined);
 
   getLogged(): Signal<boolean> {
     return this.#logged.asReadonly();
   }
 
+  getUser(): Signal<User | undefined> {
+    return this.#user.asReadonly();
+  }
+
   login(data: UserLogin): Observable<void> {
     return this.#http.post<AccessToken>('auth/login', data).pipe(
-      map((res) => {
+      tap((res) => {
         localStorage.setItem('accessToken', res.accessToken);
+      }),
+      switchMap(() => this.#http.get<User>('users/me')),
+      tap((user) => {
+        this.#user.set(user);
         this.#logged.set(true);
       }),
+      map(() => void 0),
     );
   }
 
@@ -54,26 +65,30 @@ export class AuthService {
   }
 
   isLogged(): Observable<boolean> {
-    if (!localStorage.getItem('accessToken') && !this.getLogged()()) {
+    if (!localStorage.getItem('accessToken')) {
+      this.#logged.set(false);
+      this.#user.set(undefined);
       return of(false);
     }
 
-    if (this.getLogged()()) return of(true);
+    if (this.#user()) return of(true);
 
-    return this.#http.get('auth/validate').pipe(
-      map(() => {
+    return this.#http.get<User>('users/me').pipe(
+      tap((user) => {
+        this.#user.set(user);
         this.#logged.set(true);
-        return true;
       }),
       catchError(() => {
-        localStorage.removeItem('accessToken');
+        this.logout();
         return of(false);
       }),
+      map(() => true),
     );
   }
 
   logout(): void {
     localStorage.removeItem('accessToken');
     this.#logged.set(false);
+    this.#user.set(undefined);
   }
 }

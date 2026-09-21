@@ -1,9 +1,55 @@
-
-
 #parallax-main {
   transition: transform 0.2s cubic-bezier(0.4, 1.4, 0.6, 1);
   will-change: transform;
   user-select: none;
+}
+
+.app-shell {
+  position: relative;
+  width: min(calc(100% - 2rem), 48rem);
+  min-height: 34rem;
+  height: auto;
+  overflow: visible;
+  border: 0.5rem solid white;
+  border-radius: 0.75rem;
+  background: rgb(255 255 255 / 20%);
+  box-shadow: 0 1.5rem 3rem rgb(0 0 0 / 25%);
+  backdrop-filter: blur(1.5rem);
+  transition:
+    width 600ms cubic-bezier(0.4, 1.4, 0.6, 1),
+    min-height 600ms cubic-bezier(0.4, 1.4, 0.6, 1);
+}
+
+.shell-game {
+  width: min(calc(100% - 2rem), 60rem);
+  min-height: 44rem;
+}
+
+.shell-ranking {
+  width: min(calc(100% - 2rem), 48rem);
+  min-height: 38rem;
+}
+
+.shell-login {
+  width: min(calc(100% - 2rem), 36rem);
+  min-height: 32rem;
+}
+
+.shell-register {
+  width: min(calc(100% - 2rem), 42rem);
+  min-height: 44rem;
+}
+
+@supports (interpolate-size: allow-keywords) {
+  .app-shell {
+    interpolate-size: allow-keywords;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-shell {
+    transition: none;
+  }
 }
 
 .arcade-style {

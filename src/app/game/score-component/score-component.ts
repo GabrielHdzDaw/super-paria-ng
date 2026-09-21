@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { Router } from '@angular/router';
 import { Combo } from '../interfaces/combo.interface';
+import { SoundService } from 'src/app/shared/sound-service';
 
 @Component({
   selector: 'score-component',
@@ -19,6 +20,8 @@ import { Combo } from '../interfaces/combo.interface';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ScoreComponent {
+  soundService = inject(SoundService);
+
   time = input<number>(0);
   combos = input<Combo[]>([]);
   totalScore = signal<number>(0);
@@ -139,5 +142,6 @@ export class ScoreComponent {
 
   goToMainMenu() {
     this.#router.navigate(['/']);
+    this.soundService.stop('gameMusic');
   }
 }

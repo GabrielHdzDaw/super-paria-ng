@@ -16,7 +16,9 @@
   font-family: 'Bebas Neue', sans-serif;
   z-index: 2;
 
-  max-width: fit-content;
+  width: min(calc(100% - 2rem), 52rem);
+  max-width: calc(100% - 2rem);
+  box-sizing: border-box;
   min-height: fit-content;
   margin: 0 auto;
   top: 50%;
